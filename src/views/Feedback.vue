@@ -79,7 +79,7 @@
                         </div>
 
                         <button type="submit" :disabled="!audio" class="btn">
-                            Signup
+                            Upload Audio
                         </button>
                     </form>
                 </div>

@@ -79,13 +79,15 @@
                                 placeholder="Enter your password"
                                 v-model="form.password"
                             />
-                            <div id="passwordHelp" class="form-text">
+                            <!-- <div id="passwordHelp" class="form-text">
                                 Password must be 8-20 characters long, and must
                                 contain letters and numbers.
-                            </div>
+
+                                {{ loginHelp }}
+                            </div> -->
                         </div>
 
-                        <div class="mb-3 form-check">
+                        <!-- <div class="mb-3 form-check">
                             <input
                                 type="checkbox"
                                 class="form-check-input"
@@ -94,7 +96,7 @@
                             <label class="form-check-label" for="rememberCheck"
                                 >Remember me</label
                             >
-                        </div>
+                        </div> -->
 
                         <button
                             type="submit"
@@ -156,12 +158,14 @@
                                 v-model="form.password"
                             />
                             <div id="passwordHelp" class="form-text">
-                                Password must be 8-20 characters long, and must
-                                contain letters and numbers.
+                                <!-- Password must be 8-20 characters long, and must
+                                contain letters and numbers. -->
+
+                                {{ passwordHelp }}
                             </div>
                         </div>
 
-                        <div class="mb-3 form-check">
+                        <!-- <div class="mb-3 form-check">
                             <input
                                 type="checkbox"
                                 class="form-check-input"
@@ -170,7 +174,7 @@
                             <label class="form-check-label" for="agreeCheck"
                                 >Agree to terms and conditions</label
                             >
-                        </div>
+                        </div> -->
 
                         <button
                             type="submit"
@@ -187,7 +191,7 @@
 </template>
 
 <script>
-import $ from "jquery";
+// import $ from "jquery";
 import "@/mixins";
 import { fbase } from "../firebase";
 
@@ -197,6 +201,8 @@ export default {
     data() {
         return {
             instructionText: "Please LOGIN or SIGNUP to continue",
+            // loginHelp: "",
+            passwordHelp: "",
 
             form: {
                 fullname: null,
@@ -220,14 +226,17 @@ export default {
                 .auth()
                 .signInWithEmailAndPassword(this.form.email, this.form.password)
                 .then(() => {
-                    $("#loginModal").modal("hide");
+                    // $("#loginModal").modal("hide");
                     this.$router.replace("/feedback");
                 })
                 .catch(function (error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
-                    if (errorCode === "auth/wrong-password") {
-                        alert("Wrong password.");
+                    console.log(error);
+
+                    if (errorCode == "auth/wrong-password") {
+                        alert(errorMessage);
+                        // this.loginHelp = "Wrong password!";
                     } else {
                         alert(errorMessage);
                     }
@@ -243,7 +252,8 @@ export default {
                     this.form.password
                 )
                 .then(() => {
-                    $("#loginModal").modal("hide");
+                    // $("#loginModal").modal("hide");
+
                     // clear field only when its successful
                     this.resetFormData();
                     this.$router.replace("feedback");
@@ -251,8 +261,11 @@ export default {
                 .catch((error) => {
                     var errorCode = error.code;
                     var errorMessage = error.message;
+
                     if (errorCode == "auth/weak-password") {
-                        alert("The password is too weak.");
+                        this.passwordHelp =
+                            "The password is too weak! " + errorMessage + "!";
+                        // alert("The password is too weak.");
                     } else {
                         alert(errorMessage);
                     }
