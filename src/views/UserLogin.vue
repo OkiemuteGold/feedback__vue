@@ -255,7 +255,7 @@ export default {
 
                     // clear field only when its successful
                     this.resetFormData();
-                    this.$router.replace("feedback");
+                    this.$router.replace("/feedback");
                 })
                 .catch((error) => {
                     var errorCode = error.code;

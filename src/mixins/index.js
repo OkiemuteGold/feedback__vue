@@ -116,5 +116,34 @@ Vue.mixin({
                 price: null,
             };
         },
+
+        // proper way of resetting VueJS data properties to initial values
+        resetFeedbackData() {
+            Object.assign(this.$data, this.$options.data.apply(this));
+
+            // this.feedbackData = {
+            //     cName: "",
+            //     cEmail: "",
+            //     cPhone: "",
+            //     cAddress: "",
+            //     date: "",
+
+            //     gender: "",
+            //     age: "",
+
+            //     sampleOption: "",
+            //     tasteOption: "",
+            //     packagingOption: "",
+            //     tasteLikeOption: "",
+            //     tasteDislikeOption: "",
+
+            //     rad1: "",
+            //     rad2: "",
+            //     rad3: "",
+
+            //     question1Response: "",
+            //     question2Response: ""
+            // };
+        },
     },
 });

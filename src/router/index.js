@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 // import Admin from '../views/Admin.vue'
-import UserLogin from '../views/UserLogin.vue'
+// import UserLogin from '../views/UserLogin.vue'
 import Feedback from '../views/Feedback.vue'
 
 // import Overview from '../admin-pages/Overview.vue'
@@ -49,11 +49,12 @@ const routes = [
     //         },
     //     ]
     // },
-    {
-        path: '/user-login',
-        name: 'UserLogin',
-        component: UserLogin,
-    },
+
+    // {
+    //     path: '/user-login',
+    //     name: 'UserLogin',
+    //     component: UserLogin,
+    // },
     {
         path: '/feedback',
         name: 'Feedback',
@@ -78,7 +79,7 @@ router.beforeEach((to, from, next) => {
 
     // this route requires auth, user is not registered
     if (requiresAuth && !currentUser) {
-        next("/user-login");
+        next("/");
     } else if (requiresAuth && currentUser) {
         next();
     } else {

@@ -1,22 +1,41 @@
 <template>
     <div>
-        <form
-            id="regForm"
-            @submit.prevent="submitForm()"
-            v-if="!isShownNewRespose"
+        <div
+            v-if="isShownNewRespose"
+            id="new_feedback_container"
+            class="new_feedback_container"
         >
+            <h3 class="tab_title">Thank you for your feedback</h3>
+            <p>Please submit another feedback</p>
+
+            <button @click="submitNewFeedback()">Submit New Feedback</button>
+        </div>
+
+        <form id="regForm" @submit.prevent="submitForm()" v-else>
             <!-- <h2 class="form_title">Form</h2> -->
 
-            <div class="form-group tab">
-                <h3 class="tab_title">Consumer Info</h3>
+            <div class="form-group tab" v-if="!isShownNewRespose">
+                <div class="tab_item">
+                    <label for="mname">Marketer</label>
+                    <input
+                        class="inputs form-control mb-0"
+                        type="text"
+                        id="mname"
+                        name="mname"
+                        placeholder="Full name"
+                        v-model="mName"
+                    />
+                </div>
+
+                <h3 class="tab_title mt-5">Consumer Info</h3>
 
                 <div class="tab_item">
-                    <label for="name">Consumer Name:</label>
+                    <label for="cname">Consumer Name:</label>
                     <input
                         class="inputs form-control"
                         type="text"
-                        id="name"
-                        name="name"
+                        id="cname"
+                        name="cname"
                         placeholder="Full name"
                         v-model="cName"
                     />
@@ -379,11 +398,13 @@
                     >
                     <select id="tasteLike" @input="getTasteLikeOption($event)">
                         <option disabled value="">Select what you like</option>
+                        <option value="cool milk taste">
+                            The milk taste is very cool
+                        </option>
                         <option value="nice chocolate taste">
-                            The Chocolate taste is very nice
+                            The chocolate taste is very nice
                         </option>
                     </select>
-                    {{ tasteLikeOption }}
                 </div>
                 <div class="tab_item">
                     <label for="tasteDislike"
@@ -401,7 +422,6 @@
                             The product has a sour taste
                         </option>
                     </select>
-                    {{ tasteDislikeOption }}
                 </div>
             </div>
 
@@ -421,8 +441,6 @@
                         placeholder="Your response"
                         @input="getQuestion1Response($event)"
                     ></textarea>
-
-                    {{ question1Response }}
                 </div>
                 <div class="tab_item">
                     <label for="question2"
@@ -437,9 +455,11 @@
                         placeholder="Your recommendation"
                         @input="getQuestion2Response($event)"
                     ></textarea>
-
-                    {{ question2Response }}
                 </div>
+            </div>
+
+            <div class="error_message_contianer" v-if="error">
+                <p class="error_message">{{ errorMessage }}</p>
             </div>
 
             <div class="button_container">
@@ -459,6 +479,7 @@
                         type="submit"
                         :disabled="!isValid"
                         v-if="showSubmitBtn"
+                        id="submitButton"
                     >
                         Submit
                     </button>
@@ -468,29 +489,25 @@
             <!-- indicators -->
             <!-- <div id="indicators" class="indicators"></div> -->
         </form>
-
-        <div
-            v-if="isShownNewRespose"
-            id="new_feedback_container"
-            class="new_feedback_container"
-        >
-            <h3 class="tab_title">Thank you for your feedback</h3>
-            <p>Please submit another feedback</p>
-
-            <button @click="submitNewFeedback()">Submit New Feedback</button>
-        </div>
     </div>
 </template>
 
 <script>
-// import $ from "jquery";
+import $ from "jquery";
+import "@/mixins";
+import { db } from "../firebase";
 
 export default {
     data() {
         return {
+            errorMessage:
+                "All fields are required... Please fill in the empty fields!",
+            error: false,
+
             currentTab: 0,
             showSubmitBtn: false,
             isShownNewRespose: false,
+            mName: "",
 
             cName: "",
             cEmail: "",
@@ -519,6 +536,7 @@ export default {
         // form validation
         isValidTab1() {
             return (
+                this.mName !== "" &&
                 this.cName !== "" &&
                 this.cEmail !== "" &&
                 this.cPhone !== "" &&
@@ -542,38 +560,6 @@ export default {
         isValid() {
             return this.isValidTab1 && this.isValidTab2 && this.isValidTab3;
         },
-
-        validateForm() {
-            let x,
-                y,
-                i,
-                valid = true;
-
-            x = document.getElementsByClassName("tab");
-            y = x[this.currentTab].getElementsByClassName(
-                "inputs form-control"
-            );
-
-            // loop through / checks all input / textarea fields in the current tab:
-            for (i = 0; i < y.length; i++) {
-                if (y[i].value == "") {
-                    y[i].className += " invalid";
-
-                    valid = true;
-                }
-                //  else {
-                //     valid = true;
-                // }
-            }
-
-            // If the valid status is true, mark the step as finished and valid:
-            if (valid) {
-                document.getElementsByClassName("step")[
-                    this.currentTab
-                ].className += " finish";
-            }
-            return valid;
-        },
     },
 
     methods: {
@@ -584,24 +570,36 @@ export default {
             this.nextPrev(1);
         },
 
+        removeErrorMessage() {
+            $(".inputs").change(function () {
+                $(".error_message_contianer").hide();
+            });
+            $(".error_message_contianer").show();
+        },
+
         getAge(event) {
             this.age = event.target.value;
+            console.log(this.age);
         },
         getGender(event) {
             this.gender = event.target.value;
+            console.log(this.gender);
         },
         getSampleOption(event) {
             this.sampleOption = event.target.value;
+            console.log(this.sampleOption);
         },
         getTasteOption(event) {
             this.tasteOption = event.target.value;
+            console.log(this.tasteOption);
         },
         getPackagingOption(event) {
             this.packagingOption = event.target.value;
+            console.log(this.packagingOption);
         },
         getTasteLikeOption(event) {
             this.tasteLikeOption = event.target.value;
-            console.log(this.tasteDislikeOption);
+            console.log(this.tasteLikeOption);
         },
         getTasteDislikeOption(event) {
             this.tasteDislikeOption = event.target.value;
@@ -609,40 +607,112 @@ export default {
         },
         getRadioInput1(event) {
             this.rad1 = event.target.value;
+            console.log(this.rad1);
         },
         getRadioInput2(event) {
             this.rad2 = event.target.value;
+            console.log(this.rad2);
         },
         getRadioInput3(event) {
             this.rad3 = event.target.value;
+            console.log(this.rad3);
         },
         getQuestion1Response(event) {
             this.question1Response = event.target.value;
+            console.log(this.question1Response);
         },
         getQuestion2Response(event) {
             this.question2Response = event.target.value;
+            console.log(this.question2Response);
         },
 
         submitNewFeedback() {
-            window.location.reload();
-
-            let tab = document.getElementsByClassName("tab");
-            this.currentTab = 0;
-            tab[0].style.display = "block";
-            this.showTab(this.currentTab);
+            this.resetFeedbackData();
             this.isShownNewRespose = false;
-            // $("#regForm").hide();
+            $("#regForm").show("slow");
+
+            setTimeout(() => {
+                this.currentTab = 0;
+                this.showTab(this.currentTab);
+            }, 500);
+        },
+
+        addFeedback() {
+            let feedbackData = {
+                Marketer: this.mName,
+                Consumer: this.cName,
+                cEmail: this.cEmail,
+                cPhone: this.cPhone,
+                cAddress: this.cAddress,
+                Date: this.date,
+
+                Gender: this.gender,
+                Age: this.age,
+
+                SampleOption: this.sampleOption,
+                TasteOption: this.tasteOption,
+                PackagingOption: this.packagingOption,
+                TasteLikeOption: this.tasteLikeOption,
+                TasteDislikeOption: this.tasteDislikeOption,
+
+                Rad1: this.rad1,
+                Rad2: this.rad2,
+                Rad3: this.rad3,
+
+                Question1Response: this.question1Response,
+                Question2Response: this.question2Response,
+            };
+
+            console.log(feedbackData);
+            db.collection("feedbacks")
+                .add(feedbackData)
+                .then((docRef) => {
+                    docRef;
+                    console.log("Document written with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    error;
+                    console.error("Error adding document: ", error);
+                });
         },
 
         // if last form... submit
         submitForm() {
             console.log(
-                this.question1Response,
-                this.question2Response,
+                this.mName,
+                this.cName,
+                this.cEmail,
+                this.cPhone,
+                this.cAddress,
+                this.date,
+
+                this.gender,
+                this.age,
+
+                this.sampleOption,
+                this.tasteOption,
+                this.packagingOption,
+                this.tasteLikeOption,
                 this.tasteDislikeOption,
-                this.tasteLikeOption
+
+                this.rad1,
+                this.rad2,
+                this.rad3,
+
+                this.question1Response,
+                this.question2Response
             );
+
+            if (!this.isValid) {
+                $(".error_message_contianer").show();
+            } else {
+                $(".error_message_contianer").hide();
+            }
+
+            this.addFeedback();
+
             this.isShownNewRespose = true;
+            $("#regForm").hide("slow");
         },
 
         // display the specified tab of the form...
@@ -651,22 +721,20 @@ export default {
             let prevBtn = document.getElementById("prevBtn");
             let nextBtn = document.getElementById("nextBtn");
 
-            if (tab) {
-                tab[n].style.display = "block";
+            tab[n].style.display = "block";
 
-                if (n == 0) {
-                    prevBtn.style.display = "none";
-                } else {
-                    prevBtn.style.display = "inline";
-                }
+            if (n == 0) {
+                prevBtn.style.display = "none";
+            } else {
+                prevBtn.style.display = "inline";
+            }
 
-                if (n == tab.length - 1) {
-                    nextBtn.style.display = "none";
-                    this.showSubmitBtn = true;
-                } else {
-                    this.showSubmitBtn = false;
-                    nextBtn.style.display = "inline";
-                }
+            if (n == tab.length - 1) {
+                nextBtn.style.display = "none";
+                this.showSubmitBtn = true;
+            } else {
+                this.showSubmitBtn = false;
+                nextBtn.style.display = "inline";
             }
 
             // this.fixStepIndicator(n);
@@ -676,49 +744,37 @@ export default {
         nextPrev(n) {
             let tab = document.getElementsByClassName("tab");
 
-            if (tab) {
-                // hide the current tab:
-                tab[this.currentTab].style.display = "none";
+            // hide the current tab:
+            tab[this.currentTab].style.display = "none";
 
-                // increase or decrease the current tab by 1:
-                this.currentTab += n;
+            // increase or decrease the current tab by 1:
+            this.currentTab += n;
 
-                // if (this.currentTab >= tab.length) {
-                //     this.submitForm();
-                //     this.isShownNewRespose = true;
-                //     return true;
-                // }
+            // Otherwise, display the correct tab:
+            if (this.currentTab == 1) {
+                if (!this.isValidTab1) {
+                    this.error = true;
+                    $(".error_message_contianer").show();
 
-                // Otherwise, display the correct tab:
-                if (this.currentTab == 1) {
-                    if (!this.isValidTab1) {
-                        console.log("false1");
-                        this.currentTab = 0;
-                    } else {
-                        console.log("true1");
-                        this.currentTab = 1;
-                    }
-                } else if (this.currentTab == 2) {
-                    if (!this.isValidTab2) {
-                        console.log("false1");
-                        this.currentTab = 1;
-                    } else {
-                        console.log("true1");
-                        this.currentTab = 2;
-                    }
-                } else if (this.currentTab == 3) {
-                    if (!this.isValidTab3) {
-                        console.log("false1");
-                        this.currentTab = 2;
-                    } else {
-                        // this.currentTab = 0;
-                        // this.showTab(this.currentTab);
-                        this.isShownNewRespose = true;
-                    }
+                    this.currentTab = 0;
+                } else {
+                    $(".error_message_contianer").hide();
+
+                    this.currentTab = 1;
                 }
+            } else if (this.currentTab == 2) {
+                if (!this.isValidTab2) {
+                    this.error = true;
+                    $(".error_message_contianer").show();
 
-                this.showTab(this.currentTab);
+                    this.currentTab = 1;
+                } else {
+                    $(".error_message_contianer").hide();
+                    this.currentTab = 2;
+                }
             }
+
+            this.showTab(this.currentTab);
         },
 
         // fixStepIndicator(n) {
@@ -775,33 +831,21 @@ export default {
     mounted() {
         this.currentTab = 0;
         this.showTab(this.currentTab);
+        this.removeErrorMessage();
     },
 };
 </script>
 
 <style scoped lang="scss">
-select {
-    display: inline-block;
-    width: 100%;
-    padding: 12px 20px 12px 10px;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-}
-
-// #regForm,
-// #newFeedback {
-//     background-color: #0f202c;
-// }
-
-.form_title {
-    text-align: center;
-    text-transform: uppercase;
-    margin-bottom: 2rem;
+#regForm {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    position: relative;
 }
 
 .tab_title,
 .tab_item {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .tab_item label {
@@ -816,6 +860,41 @@ select {
         color: #ccc;
         margin-bottom: 0.5rem;
     }
+}
+
+.error_message_contianer {
+    // position: absolute;
+    // top: 50%;
+    // bottom: 50%;
+    // left: 0;
+    // right: 0;
+    // width: 100%;
+    // max-width: 270px;
+    // height: 150px;
+    // background: rgba(15, 16, 24, 0.85);
+    // margin: 0 auto;
+    // padding: 10px 20px;
+    // border-radius: 0.25rem;
+    // text-align: center;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+
+    .error_message {
+        color: var(--errorColor);
+        text-transform: initial;
+        letter-spacing: 1px;
+        font-size: 14px;
+        font-style: italic;
+    }
+}
+
+select {
+    display: inline-block;
+    width: 100%;
+    padding: 12px 20px 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
 }
 
 .question_label {
@@ -852,6 +931,17 @@ textarea {
         margin-bottom: 0;
         margin-right: 1.5rem;
         cursor: pointer;
+    }
+
+    @media screen and (max-width: 426px) {
+        & {
+            flex-wrap: wrap;
+
+            label,
+            input[type="radio"] {
+                margin-bottom: 0.5rem;
+            }
+        }
     }
 }
 

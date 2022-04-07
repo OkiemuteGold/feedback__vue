@@ -16,7 +16,7 @@ export default {};
     --appBackgroundDark: #0f202c;
     --customBlue: #2c84a7;
     --customBlueLight: #39aad6;
-    --customYellow: #ffc107;
+    --errorColor: #dc3545;
     --customSectionBg: #f1f1f1;
     --customParaText: #737373;
     --customText: #2c3e50;
@@ -38,6 +38,7 @@ body {
     overflow-x: hidden;
 }
 
+.logoutBtn,
 #regForm,
 input,
 textarea,
@@ -59,8 +60,13 @@ p {
     color: var(--customParaText);
 }
 
-img {
+img,
+svg {
     max-width: 100%;
     height: auto;
+}
+
+svg {
+    vertical-align: middle;
 }
 </style>
