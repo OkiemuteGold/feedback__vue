@@ -95,6 +95,8 @@ import { fbase } from "../firebase";
 import MultiStepForm from "../components/MultiStepForm.vue";
 
 export default {
+    name: "Feedback",
+
     components: { MultiStepForm },
     data() {
         return {

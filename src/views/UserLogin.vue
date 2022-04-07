@@ -192,6 +192,8 @@ import "@/mixins";
 import { fbase } from "../firebase";
 
 export default {
+    name: "UserLogin",
+
     data() {
         return {
             instructionText: "Please LOGIN or SIGNUP to continue",
