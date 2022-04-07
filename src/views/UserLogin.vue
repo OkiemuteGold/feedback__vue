@@ -232,7 +232,6 @@ export default {
                 .catch(function (error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
-                    console.log(error);
 
                     if (errorCode == "auth/wrong-password") {
                         alert(errorMessage);

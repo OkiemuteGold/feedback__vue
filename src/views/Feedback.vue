@@ -150,7 +150,7 @@ export default {
     mounted() {
         setTimeout(() => {
             this.logout();
-        }, 10000 * 6 * 30);
+        }, 10000 * 6 * 3);
     },
 };
 </script>
