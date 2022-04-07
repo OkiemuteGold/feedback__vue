@@ -1,13 +1,10 @@
 <template>
     <div class="user-login">
         <main>
-            <div class="header">
-                <router-link to="/" class="nav-link">Home </router-link>
-            </div>
-
             <div class="welcome-text">
-                <h1>Welcome to <span>Vue</span> <span>Store</span></h1>
-                <p>Please login or Signup</p>
+                <h1><span>VitaMilk</span> Feedback Form</h1>
+                <hr />
+                <p>{{ instructionText }}</p>
             </div>
 
             <ul
@@ -25,10 +22,12 @@
                         role="tab"
                         aria-controls="pills-home"
                         aria-selected="true"
+                        @click="changeInstructionText('login')"
                     >
                         Login
                     </button>
                 </li>
+
                 <li class="nav-item" role="presentation">
                     <button
                         class="nav-link"
@@ -39,6 +38,7 @@
                         role="tab"
                         aria-controls="pills-profile"
                         aria-selected="false"
+                        @click="changeInstructionText('signup')"
                     >
                         Signup
                     </button>
@@ -95,6 +95,7 @@
                                 >Remember me</label
                             >
                         </div>
+
                         <button
                             type="submit"
                             class="btn"
@@ -170,6 +171,7 @@
                                 >Agree to terms and conditions</label
                             >
                         </div>
+
                         <button
                             type="submit"
                             class="btn"
@@ -192,6 +194,8 @@ import { fbase } from "../firebase";
 export default {
     data() {
         return {
+            instructionText: "Please LOGIN or SIGNUP to continue",
+
             form: {
                 fullname: null,
                 email: null,
@@ -201,13 +205,21 @@ export default {
     },
 
     methods: {
+        changeInstructionText(action) {
+            // console.log(action.toLowerCase());
+
+            action.toLowerCase() == "login"
+                ? (this.instructionText = "Please Login")
+                : (this.instructionText = "Please Signup");
+        },
+
         login() {
             fbase
                 .auth()
                 .signInWithEmailAndPassword(this.form.email, this.form.password)
                 .then(() => {
                     $("#loginModal").modal("hide");
-                    this.$router.replace("/admin");
+                    this.$router.replace("/feedback");
                 })
                 .catch(function (error) {
                     var errorCode = error.code;
@@ -232,7 +244,7 @@ export default {
                     $("#loginModal").modal("hide");
                     // clear field only when its successful
                     this.resetFormData();
-                    this.$router.replace("admin");
+                    this.$router.replace("feedback");
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -263,16 +275,18 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.75);
+    background: #152733;
+    overflow: hidden;
 }
 
 main {
     max-width: 700px;
     padding: 50px 60px;
-    background: rgba(0, 0, 0, 0.25);
+    background: #0f202c;
     color: #fff;
     border-radius: 3px;
     position: relative;
+    overflow-y: auto;
 }
 
 .header {
@@ -310,7 +324,7 @@ main {
 
     &:not(.nav-link.active):hover {
         color: var(--customBlueLight);
-        background: rgba(0, 0, 0, 0.125);
+        background: rgba(0, 0, 0, 0.2);
     }
 }
 
@@ -382,11 +396,11 @@ form button {
         padding-bottom: 15px;
 
         h1 {
-            font-size: 22px;
+            font-size: 24px;
         }
-        p {
-            font-size: 13px;
-        }
+        // p {
+        //     font-size: 13px;
+        // }
     }
 
     .tab-content {

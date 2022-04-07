@@ -1,8 +1,6 @@
 <template>
     <div id="app">
-        <div>
-            <router-view />
-        </div>
+        <router-view />
     </div>
 </template>
 
@@ -14,6 +12,8 @@ export default {};
 // @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap');
 
 :root {
+    --appBackgroundLight: #152733;
+    --appBackgroundDark: #0f202c;
     --customBlue: #2c84a7;
     --customBlueLight: #39aad6;
     --customYellow: #ffc107;
@@ -26,20 +26,26 @@ export default {};
 body {
     margin: 0;
     padding: 0;
-    font-family: "Montserrat", sans-serif;
 }
 
-body,
 #app {
+    // font-family: "Raleway", sans-serif;
+    font-family: "Montserrat", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     box-sizing: border-box;
+    color: var(--customText);
     overflow-x: hidden;
 }
 
-#app {
-    // font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: var(--customText);
+#regForm,
+input,
+textarea,
+button {
+    -o-transition: 0.4s ease;
+    -moz-transition: 0.4s ease;
+    -webkit-transition: 0.4s ease;
+    transition: 0.4s ease;
 }
 
 .product .quillWrapper .ql-snow.ql-toolbar {
