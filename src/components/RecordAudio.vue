@@ -56,6 +56,14 @@ export default {
 
                     // Success callback
                     .then(function (stream) {
+                        if ("srcObject" in audioPlayer) {
+                            audioPlayer.srcObject = stream;
+                        } else {
+                            // Old version
+                            audioPlayer.src =
+                                window.URL.createObjectURL(stream);
+                        }
+
                         const mediaRecorder = new MediaRecorder(stream);
 
                         btnRecord.onclick = function () {

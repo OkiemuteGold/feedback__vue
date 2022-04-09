@@ -49,7 +49,7 @@ button {
     transition: 0.4s ease;
 }
 
-input:focus,
+// input:focus,
 button:focus,
 .btn:active,
 .btn:focus {

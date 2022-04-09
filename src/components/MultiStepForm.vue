@@ -16,141 +16,100 @@
 
             <div class="form-group tab" v-if="!isShownNewRespose">
                 <div class="tab_item">
-                    <label for="mname">Marketer</label>
+                    <label for="marketerName">Marketer</label>
                     <input
                         class="inputs form-control mb-0"
                         type="text"
-                        id="mname"
-                        name="mname"
+                        id="marketerName"
+                        name="marketerName"
                         placeholder="Full name"
-                        v-model="mName"
+                        v-model="marketerName"
                     />
                 </div>
 
                 <h3 class="tab_title mt-5">Consumer Info</h3>
 
-                <div class="tab_item">
-                    <label for="cname">Consumer Name:</label>
+                <div
+                    class="tab_item"
+                    v-for="info in consumerInfos"
+                    :key="info.code"
+                >
+                    <label :for="info.code">{{ info.name }}:</label>
+
                     <input
-                        class="inputs form-control"
-                        type="text"
-                        id="cname"
-                        name="cname"
-                        placeholder="Full name"
-                        v-model="cName"
-                    />
-                </div>
-                <div class="tab_item">
-                    <label for="email">Email:</label>
-                    <input
-                        class="inputs form-control"
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="E-mail address"
-                        v-model="cEmail"
-                    />
-                </div>
-                <div class="tab_item">
-                    <label for="phone">Phone:</label>
-                    <input
+                        v-if="info.type === 'number'"
                         class="inputs form-control"
                         type="number"
                         min="0"
-                        id="phone"
-                        name="phone"
-                        placeholder="Phone number"
-                        v-model="cPhone"
+                        :id="info.code"
+                        :name="info.code"
+                        :placeholder="info.placeholder"
+                        @input="getConsumerInfo($event)"
                     />
-                </div>
-                <div class="tab_item">
-                    <label for="address">Location/Address:</label>
                     <input
+                        v-else
                         class="inputs form-control"
-                        type="text"
-                        id="address"
-                        name="address"
-                        placeholder="Location/address..."
-                        v-model="cAddress"
+                        :type="info.type"
+                        :id="info.code"
+                        :name="info.code"
+                        :placeholder="info.placeholder"
+                        @input="getConsumerInfo($event)"
                     />
+
+                    <!-- <span v-if="info.code === 'consumerName'">
+                        {{ consumerName }}
+                    </span>
+                    <span v-if="info.code === 'consumerEmail'">
+                        {{ consumerEmail }}
+                    </span>
+                    <span v-if="info.code === 'consumerPhone'">
+                        {{ consumerPhone }}
+                    </span>
+                    <span v-if="info.code === 'consumerAddress'">
+                        {{ consumerAddress }}
+                    </span> -->
                 </div>
 
                 <div class="tab_item">
                     <label for="genderInput">Gender:</label>
+
                     <div class="radio_inputs" id="genderInput">
-                        <label for="male">Male</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="male"
-                            name="gender"
-                            value="male"
-                            @input="getGender($event)"
-                        />
+                        <div
+                            v-for="genderItem in genders"
+                            :key="genderItem.code"
+                        >
+                            <label :for="genderItem.code">{{
+                                genderItem.name
+                            }}</label>
 
-                        <label for="female">Female</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="female"
-                            name="gender"
-                            value="female"
-                            @input="getGender($event)"
-                        />
-
-                        <label for="other">Other</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="other"
-                            name="gender"
-                            value="other"
-                            @input="getGender($event)"
-                        />
+                            <input
+                                class="inputs"
+                                type="radio"
+                                :id="genderItem.code"
+                                :value="genderItem.code"
+                                v-model="gender"
+                            />
+                        </div>
                     </div>
                 </div>
+
                 <div class="tab_item">
                     <label for="ageInput">Age (Years):</label>
+
                     <div class="radio_inputs" id="ageInput">
-                        <label for="age1">15 - 25</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="age1"
-                            name="age"
-                            value="15-25"
-                            @input="getAge($event)"
-                        />
+                        <div v-for="ageItem in ages" :key="ageItem.code">
+                            <label :for="ageItem.code">{{
+                                ageItem.name
+                            }}</label>
 
-                        <label for="age2">26 - 35</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="age2"
-                            name="age"
-                            value="26-35"
-                            @input="getAge($event)"
-                        />
-
-                        <label for="age3">36 - 45</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="age3"
-                            name="age"
-                            value="36-45"
-                            @input="getAge($event)"
-                        />
-
-                        <label for="age4">46 - 60</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="age4"
-                            name="age"
-                            value="46-60"
-                            @input="getAge($event)"
-                        />
+                            <input
+                                class="inputs"
+                                type="radio"
+                                :id="ageItem.code"
+                                :value="`${ageItem.name} years`"
+                                v-model="age"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -170,256 +129,114 @@
 
                 <div class="tab_item">
                     <label for="productSampling">Product for sampling</label>
-                    <select
-                        id="productSampling"
-                        @input="getSampleOption($event)"
-                    >
-                        <option disabled>Select product for sampling</option>
-                        <option value="Vita Milk Strawberry">
-                            Vita Milk Strawberry
+                    <select id="productSampling" v-model="samplingOption">
+                        <option disabled value="">
+                            Select product for sampling
                         </option>
-                        <option value="Vita Milk Chocolate">
-                            Vita Milk Chocolate
+                        <option
+                            v-for="option in samplingOptions"
+                            :key="option.id"
+                        >
+                            {{ option.value }}
                         </option>
                     </select>
                 </div>
+
                 <div class="tab_item">
                     <label for="feedbackTaste">Feedback on taste</label>
-                    <select id="feedbackTaste" @input="getTasteOption($event)">
-                        <option disabled>Select feedback on taste</option>
-                        <option value="very good">
-                            The taste was very good
+                    <select id="feedbackTaste" v-model="tasteOption">
+                        <option disabled value="">
+                            Select feedback on taste
                         </option>
-                        <option value="not okay">The taste was not okay</option>
+                        <option v-for="option in tasteOptions" :key="option.id">
+                            {{ option.value }}
+                        </option>
                     </select>
                 </div>
+
                 <div class="tab_item">
                     <label for="feedbackPackaging">Feedback on packaging</label>
-                    <select
-                        id="feedbackPackaging"
-                        @input="getPackagingOption($event)"
-                    >
-                        <option disabled>Select feedback on packaging</option>
-                        <option value="nice and colorful">
-                            The packaging is very nice and colorful
+                    <select id="feedbackPackaging" v-model="packagingOption">
+                        <option disabled value="">
+                            Select feedback on packaging
                         </option>
-                        <option value="needs improvement">
-                            The packaging needs improvement
+                        <option
+                            v-for="option in packagingOptions"
+                            :key="option.id"
+                        >
+                            {{ option.value }}
                         </option>
                     </select>
                 </div>
 
-                <div class="tab_item">
-                    <label for="rad1Input" class="question_label"
-                        >How do you see the appearance of the product you just
-                        tasted?
-                        <span>
-                            (Very good: 5, Good: 4, Fair: 3, Poor: 2, Bad: 1)
-                        </span>
+                <div
+                    class="tab_item"
+                    v-for="singleRating in ratings"
+                    :key="singleRating.id"
+                >
+                    <label :for="singleRating.id" class="question_label">
+                        <span>{{ singleRating.label }}</span>
+                        <ul>
+                            (
+                            <li
+                                v-for="rating in singleRating.ratings"
+                                :key="rating.code"
+                            >
+                                {{ rating.value }}: {{ rating.code }}
+                            </li>
+                            )
+                        </ul>
                     </label>
 
-                    <div class="radio_inputs" id="rad1Input">
-                        <label for="rad1one">1</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad1one"
-                            name="rad1"
-                            value="Bad"
-                            @input="getRadioInput1($event)"
-                        />
+                    <div class="radio_inputs" :id="singleRating.id">
+                        <div
+                            v-for="rating in singleRating.ratings"
+                            :key="rating.name + rating.code"
+                        >
+                            <label :for="rating.name + rating.code">{{
+                                rating.code
+                            }}</label>
 
-                        <label for="rad1two">2</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad1two"
-                            name="rad1"
-                            value="Poor"
-                            @input="getRadioInput1($event)"
-                        />
-
-                        <label for="rad1three">3</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad1three"
-                            name="rad1"
-                            value="Fair"
-                            @input="getRadioInput1($event)"
-                        />
-
-                        <label for="rad1four">4</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad1four"
-                            name="rad1"
-                            value="Good"
-                            @input="getRadioInput1($event)"
-                        />
-
-                        <label for="rad1five">5</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad1five"
-                            name="rad1"
-                            value="Very good"
-                            @input="getRadioInput1($event)"
-                        />
-                    </div>
-                </div>
-                <div class="tab_item">
-                    <label for="rad2Input" class="question_label"
-                        >How sweet is the product you just tasted?
-                        <span>
-                            (Very sweet: 5, Sweet: 4, Fair: 3, Poor: 2, Bad: 1)
-                        </span>
-                    </label>
-
-                    <div class="radio_inputs" id="rad2Input">
-                        <label for="rad2one">1</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad2one"
-                            name="rad2"
-                            value="Bad"
-                            @input="getRadioInput2($event)"
-                        />
-
-                        <label for="rad2two">2</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad2two"
-                            name="rad2"
-                            value="Poor"
-                            @input="getRadioInput2($event)"
-                        />
-
-                        <label for="rad2three">3</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad2three"
-                            name="rad2"
-                            value="Fair"
-                            @input="getRadioInput2($event)"
-                        />
-
-                        <label for="rad2four">4</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad2four"
-                            name="rad2"
-                            value="Good"
-                            @input="getRadioInput2($event)"
-                        />
-
-                        <label for="rad2five">5</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad2five"
-                            name="rad2"
-                            value="Very good"
-                            @input="getRadioInput2($event)"
-                        />
-                    </div>
-                </div>
-                <div class="tab_item">
-                    <label for="rad3Input" class="question_label"
-                        >What is your overall ratings for the product you just
-                        tasted?
-                        <span>
-                            (Very good: 5, Good: 4, Fair: 3, Poor: 2, Bad: 1)
-                        </span>
-                    </label>
-
-                    <div class="radio_inputs" id="rad3Input">
-                        <label for="rad3one">1</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad3one"
-                            name="rad3"
-                            value="Bad"
-                            @input="getRadioInput3($event)"
-                        />
-
-                        <label for="rad3two">2</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad3two"
-                            name="rad3"
-                            value="Poor"
-                            @input="getRadioInput3($event)"
-                        />
-
-                        <label for="rad3three">3</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad3three"
-                            name="rad3"
-                            value="Fair"
-                            @input="getRadioInput3($event)"
-                        />
-
-                        <label for="rad3four">4</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad3four"
-                            name="rad3"
-                            value="Good"
-                            @input="getRadioInput3($event)"
-                        />
-
-                        <label for="rad3five">5</label>
-                        <input
-                            class="inputs"
-                            type="radio"
-                            id="rad3five"
-                            name="rad3"
-                            value="Very good"
-                            @input="getRadioInput3($event)"
-                        />
+                            <input
+                                class="inputs"
+                                type="radio"
+                                :name="rating.name"
+                                :id="rating.name + rating.code"
+                                :value="rating.value"
+                                @input="getRatings($event)"
+                            />
+                        </div>
                     </div>
                 </div>
 
                 <div class="tab_item">
-                    <label for="tasteLike"
-                        >What do you like about the taste?</label
-                    >
-                    <select id="tasteLike" @input="getTasteLikeOption($event)">
+                    <label for="tasteLike" class="question_label">
+                        <span>What do you like about the taste?</span>
+                    </label>
+                    <select id="tasteLike" v-model="tasteLikeOption">
                         <option disabled value="">Select what you like</option>
-                        <option value="cool milk taste">
-                            The milk taste is very cool
-                        </option>
-                        <option value="nice chocolate taste">
-                            The chocolate taste is very nice
+                        <option
+                            v-for="option in tasteLikeOptions"
+                            :key="option.id"
+                        >
+                            {{ option.value }}
                         </option>
                     </select>
                 </div>
+
                 <div class="tab_item">
-                    <label for="tasteDislike"
-                        >What do you dislike about the taste?
+                    <label for="tasteDislike" class="question_label">
+                        <span>What do you dislike about the taste?</span>
                     </label>
-                    <select
-                        id="tasteDislike"
-                        @input="getTasteDislikeOption($event)"
-                    >
-                        <option disabled>Select what you dislike</option>
-                        <option value="the aroma">
-                            I am allergic to such aroma
+                    <select id="tasteDislike" v-model="tasteDislikeOption">
+                        <option disabled value="">
+                            Select what you dislike
                         </option>
-                        <option value="taste is sour">
-                            The product has a sour taste
+                        <option
+                            v-for="option in tasteDislikeOptions"
+                            :key="option.id"
+                        >
+                            {{ option.value }}
                         </option>
                     </select>
                 </div>
@@ -428,32 +245,22 @@
             <div class="form-group tab">
                 <!-- <h3 class="tab_title">Please give us your feedback</h3> -->
 
-                <div class="tab_item">
-                    <label for="question1"
-                        >What do you like about the product?</label
-                    >
+                <div
+                    class="tab_item"
+                    v-for="response in textAreaResponse"
+                    :key="response.id"
+                >
+                    <label :for="response.id" class="question_label">
+                        <span>{{ response.question }}</span>
+                    </label>
                     <textarea
                         class="inputs form-control"
-                        name="question1"
-                        id="question1"
+                        :name="response.id"
+                        :id="response.id"
                         cols="30"
                         rows="5"
-                        placeholder="Your response"
-                        @input="getQuestion1Response($event)"
-                    ></textarea>
-                </div>
-                <div class="tab_item">
-                    <label for="question2"
-                        >What would you recommend we do differently?</label
-                    >
-                    <textarea
-                        class="inputs form-control"
-                        name="question2"
-                        id="question2"
-                        cols="30"
-                        rows="5"
-                        placeholder="Your recommendation"
-                        @input="getQuestion2Response($event)"
+                        :placeholder="response.placeholder"
+                        @input="getTextAreaResponse($event)"
                     ></textarea>
                 </div>
             </div>
@@ -497,9 +304,33 @@ import $ from "jquery";
 import "@/mixins";
 import { db } from "../firebase";
 
+import genders from "@/api/genders";
+import ages from "@/api/ages";
+import consumerInfos from "@/api/consumerInfos";
+import ratings from "@/api/ratings";
+import packagingOptions from "@/api/packagingOptions";
+import tasteOptions from "@/api/tasteOptions";
+import samplingOptions from "@/api/samplingOptions";
+import tasteLikeOptions from "@/api/tasteLikeOptions";
+import tasteDislikeOptions from "@/api/tasteDislikeOptions";
+import textAreaResponse from "@/api/textAreaResponse";
+
 export default {
     data() {
         return {
+            genders,
+            ages,
+            consumerInfos,
+            ratings,
+            packagingOptions,
+            tasteOptions,
+            samplingOptions,
+            tasteLikeOptions,
+            tasteDislikeOptions,
+            textAreaResponse,
+
+            allFeedbacks: [],
+
             errorMessage:
                 "All fields are required... Please fill in the empty fields!",
             error: false,
@@ -507,26 +338,24 @@ export default {
             currentTab: 0,
             showSubmitBtn: false,
             isShownNewRespose: false,
-            mName: "",
 
-            cName: "",
-            cEmail: "",
-            cPhone: "",
-            cAddress: "",
+            marketerName: "",
+            consumerName: "",
+            consumerEmail: "",
+            consumerPhone: "",
+            consumerAddress: "",
             date: "",
-
             gender: "",
             age: "",
 
-            sampleOption: "",
+            samplingOption: "",
             tasteOption: "",
             packagingOption: "",
             tasteLikeOption: "",
             tasteDislikeOption: "",
-
-            rad1: "",
-            rad2: "",
-            rad3: "",
+            appearanceRatings: "",
+            tasteRatings: "",
+            overallRatings: "",
 
             question1Response: "",
             question2Response: "",
@@ -534,13 +363,17 @@ export default {
     },
     computed: {
         // form validation
+        isValidEmail() {
+            let email = this.validEmail(this.consumerEmail);
+            return email;
+        },
+
         isValidTab1() {
             return (
-                this.mName !== "" &&
-                this.cName !== "" &&
-                this.cEmail !== "" &&
-                this.cPhone !== "" &&
-                this.cAddress !== "" &&
+                this.marketerName !== "" &&
+                this.consumerName !== "" &&
+                this.consumerPhone !== "" &&
+                this.consumerAddress !== "" &&
                 this.date !== "" &&
                 this.gender !== "" &&
                 this.age !== ""
@@ -548,7 +381,16 @@ export default {
         },
 
         isValidTab2() {
-            return this.rad1 !== "" && this.rad2 !== "" && this.rad3 !== "";
+            return (
+                this.samplingOption !== "" &&
+                this.tasteOption !== "" &&
+                this.packagingOption !== "" &&
+                this.tasteLikeOption !== "" &&
+                this.tasteDislikeOption !== "" &&
+                this.tasteRatings !== "" &&
+                this.appearanceRatings !== "" &&
+                this.overallRatings !== ""
+            );
         },
 
         isValidTab3() {
@@ -558,7 +400,12 @@ export default {
         },
 
         isValid() {
-            return this.isValidTab1 && this.isValidTab2 && this.isValidTab3;
+            return (
+                this.isValidEmail &&
+                this.isValidTab1 &&
+                this.isValidTab2 &&
+                this.isValidTab3
+            );
         },
     },
 
@@ -577,53 +424,45 @@ export default {
             $(".error_message_contianer").show();
         },
 
-        getAge(event) {
-            this.age = event.target.value;
-            console.log(this.age);
+        validEmail(email) {
+            let emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            return emailReg.test(email);
         },
-        getGender(event) {
-            this.gender = event.target.value;
-            console.log(this.gender);
+
+        getConsumerInfo(event) {
+            let name = event.target.name;
+
+            if (name === "consumerName") {
+                this.consumerName = event.target.value;
+            } else if (name === "consumerEmail") {
+                this.consumerEmail = event.target.value;
+            } else if (name === "consumerPhone") {
+                this.consumerPhone = event.target.value;
+            } else if (name === "consumerAddress") {
+                this.consumerAddress = event.target.value;
+            }
         },
-        getSampleOption(event) {
-            this.sampleOption = event.target.value;
-            console.log(this.sampleOption);
+
+        getRatings(event) {
+            let name = event.target.name;
+
+            if (name === "appearanceRatings") {
+                this.appearanceRatings = event.target.value;
+            } else if (name === "tasteRatings") {
+                this.tasteRatings = event.target.value;
+            } else if (name === "overallRatings") {
+                this.overallRatings = event.target.value;
+            }
         },
-        getTasteOption(event) {
-            this.tasteOption = event.target.value;
-            console.log(this.tasteOption);
-        },
-        getPackagingOption(event) {
-            this.packagingOption = event.target.value;
-            console.log(this.packagingOption);
-        },
-        getTasteLikeOption(event) {
-            this.tasteLikeOption = event.target.value;
-            console.log(this.tasteLikeOption);
-        },
-        getTasteDislikeOption(event) {
-            this.tasteDislikeOption = event.target.value;
-            console.log(this.tasteDislikeOption);
-        },
-        getRadioInput1(event) {
-            this.rad1 = event.target.value;
-            console.log(this.rad1);
-        },
-        getRadioInput2(event) {
-            this.rad2 = event.target.value;
-            console.log(this.rad2);
-        },
-        getRadioInput3(event) {
-            this.rad3 = event.target.value;
-            console.log(this.rad3);
-        },
-        getQuestion1Response(event) {
-            this.question1Response = event.target.value;
-            console.log(this.question1Response);
-        },
-        getQuestion2Response(event) {
-            this.question2Response = event.target.value;
-            console.log(this.question2Response);
+
+        getTextAreaResponse(event) {
+            let name = event.target.name;
+
+            if (name === "question1") {
+                this.question1Response = event.target.value;
+            } else if (name === "question2") {
+                this.question2Response = event.target.value;
+            }
         },
 
         submitNewFeedback() {
@@ -637,33 +476,36 @@ export default {
             }, 500);
         },
 
-        addFeedback() {
+        addFormFeedback() {
             let feedbackData = {
-                Marketer: this.mName,
-                Consumer: this.cName,
-                cEmail: this.cEmail,
-                cPhone: this.cPhone,
-                cAddress: this.cAddress,
+                Marketer: this.marketerName,
+                Consumer: this.consumerName,
+                consumerEmail: this.consumerEmail,
+                consumerPhone: this.consumerPhone,
+                consumerAddress: this.consumerAddress,
                 Date: this.date,
 
                 Gender: this.gender,
                 Age: this.age,
 
-                SampleOption: this.sampleOption,
+                SamplingOption: this.samplingOption,
                 TasteOption: this.tasteOption,
                 PackagingOption: this.packagingOption,
                 TasteLikeOption: this.tasteLikeOption,
                 TasteDislikeOption: this.tasteDislikeOption,
 
-                Rad1: this.rad1,
-                Rad2: this.rad2,
-                Rad3: this.rad3,
+                tasteRatings: this.tasteRatings,
+                appearanceRatings: this.appearanceRatings,
+                overallRatings: this.overallRatings,
 
                 Question1Response: this.question1Response,
                 Question2Response: this.question2Response,
+
+                createdAt: new Date(),
             };
 
             console.log(feedbackData);
+
             db.collection("feedbacks")
                 .add(feedbackData)
                 .then((docRef) => {
@@ -676,43 +518,72 @@ export default {
                 });
         },
 
+        getFormFeedbacks() {
+            /* And use .orderBy("createdAt").onSnapshot() to order by time
+                replace .get().then() with .onSnapshot() for realtime update
+            */
+            db.collection("feedbacks")
+                .orderBy("createdAt")
+                .get()
+                .then((querySnapshot) => {
+                    let allFeebacks = [];
+
+                    querySnapshot.forEach((doc) => {
+                        allFeebacks.push(doc.data());
+                    });
+
+                    this.allFeedbacks = allFeebacks;
+                    console.log(this.allFeedbacks);
+                });
+        },
+
         // if last form... submit
         submitForm() {
-            console.log(
-                this.mName,
-                this.cName,
-                this.cEmail,
-                this.cPhone,
-                this.cAddress,
-                this.date,
+            // console.log(
+            //     this.marketerName,
+            //     this.consumerName,
+            //     this.consumerEmail,
+            //     this.consumerPhone,
+            //     this.consumerAddress,
+            //     this.date,
 
-                this.gender,
-                this.age,
+            //     this.gender,
+            //     this.age,
 
-                this.sampleOption,
-                this.tasteOption,
-                this.packagingOption,
-                this.tasteLikeOption,
-                this.tasteDislikeOption,
+            //     this.samplingOption,
+            //     this.tasteOption,
+            //     this.packagingOption,
+            //     this.tasteLikeOption,
+            //     this.tasteDislikeOption,
 
-                this.rad1,
-                this.rad2,
-                this.rad3,
+            //     this.tasteRatings,
+            //     this.appearanceRatings,
+            //     this.overallRatings,
 
-                this.question1Response,
-                this.question2Response
-            );
+            //     this.question1Response,
+            //     this.question2Response
+            // );
 
-            if (!this.isValid) {
-                $(".error_message_contianer").show();
-            } else {
+            if (this.isValid) {
+                this.addFormFeedback();
+
+                this.isShownNewRespose = true;
+                $("#regForm").hide("slow");
+
+                this.errorMessage =
+                    "All fields are required... Please fill in the empty fields!";
                 $(".error_message_contianer").hide();
+            } else {
+                this.currentTab = 2;
+                this.showTab(this.currentTab);
+
+                this.errorMessage =
+                    "Please check all tabs and fill in the empty fields!";
+                $(".error_message_contianer").show();
+
+                this.isShownNewRespose = false;
+                $("#regForm").show("slow");
             }
-
-            this.addFeedback();
-
-            this.isShownNewRespose = true;
-            $("#regForm").hide("slow");
         },
 
         // display the specified tab of the form...
@@ -752,15 +623,30 @@ export default {
 
             // Otherwise, display the correct tab:
             if (this.currentTab == 1) {
+                this.errorMessage =
+                    "All fields are required... Please fill in the empty fields!";
+
                 if (!this.isValidTab1) {
                     this.error = true;
                     $(".error_message_contianer").show();
-
                     this.currentTab = 0;
-                } else {
-                    $(".error_message_contianer").hide();
 
-                    this.currentTab = 1;
+                    // hide error message on input
+                    this.removeErrorMessage();
+                }
+
+                if (this.isValidTab1) {
+                    if (!this.isValidEmail) {
+                        this.error = true;
+                        this.errorMessage =
+                            "Please enter a valid email address";
+                        $(".error_message_contianer").show();
+
+                        this.currentTab = 0;
+                    } else {
+                        $(".error_message_contianer").hide();
+                        this.currentTab = 1;
+                    }
                 }
             } else if (this.currentTab == 2) {
                 if (!this.isValidTab2) {
@@ -833,35 +719,14 @@ export default {
         this.showTab(this.currentTab);
         this.removeErrorMessage();
     },
+
+    created() {
+        this.getFormFeedbacks();
+    },
 };
 </script>
 
 <style scoped lang="scss">
-#regForm {
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
-    position: relative;
-}
-
-.tab_title,
-.tab_item {
-    margin-bottom: 1.5rem;
-}
-
-.tab_item label {
-    display: inline-block;
-    font-size: 15px;
-    margin-bottom: 0.5rem;
-
-    & span {
-        display: inline-block;
-        font-style: italic;
-        font-size: 13.5px;
-        color: #ccc;
-        margin-bottom: 0.5rem;
-    }
-}
-
 .error_message_contianer {
     // position: absolute;
     // top: 50%;
@@ -889,36 +754,92 @@ export default {
     }
 }
 
-select {
+#regForm {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    position: relative;
+}
+
+/* hide all steps by default: */
+.tab {
+    display: none;
+}
+
+.button_container {
+    overflow: auto;
+}
+
+.buttons {
+    float: right;
+}
+
+.tab_title,
+.tab_item {
+    margin-bottom: 1.5rem;
+}
+
+.tab_item label {
     display: inline-block;
-    width: 100%;
-    padding: 12px 20px 12px 10px;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
+    font-size: 15px;
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+
+    &.question_label span {
+        text-transform: initial;
+    }
+
+    & ul {
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 13px;
+        font-style: italic;
+        color: #bbb;
+        padding-left: 0;
+        margin-top: 0.125rem;
+        margin-bottom: 0.25rem;
+
+        & li {
+            display: flex;
+            list-style: none;
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+            letter-spacing: 0.25px;
+            text-transform: capitalize;
+        }
+    }
 }
 
-.question_label {
-    text-transform: initial;
-}
-
+select,
 input,
 textarea {
-    padding: 10px;
     width: 100%;
     font-size: 15px;
-    border: 1px solid #aaaaaa;
-    margin-bottom: 1rem;
+    border: 1px solid #bbb;
     border-radius: 0.25rem;
+    padding: 10px;
+    margin-bottom: 1rem;
+}
+
+select {
+    display: inline-block;
+    padding-right: 20px;
+    margin-bottom: 0;
 }
 
 textarea {
     resize: vertical;
     max-height: 80px;
+    // white-space: pre-line;
 }
 
 .radio_inputs {
     display: flex;
     align-items: center;
+
+    & > div {
+        display: flex;
+        align-items: center;
+    }
 
     & label {
         margin-bottom: 0;
@@ -951,19 +872,6 @@ textarea.invalid {
     background-color: #ffdddd;
 }
 
-/* hide all steps by default: */
-.tab {
-    display: none;
-}
-
-.button_container {
-    overflow: auto;
-}
-
-.buttons {
-    float: right;
-}
-
 button {
     background-color: #04aa6d;
     color: #ffffff;
@@ -972,6 +880,10 @@ button {
     font-size: 15px;
     cursor: pointer;
     border-radius: 0.25rem;
+
+    &:disabled {
+        cursor: auto;
+    }
 
     &:disabled,
     &:hover {
@@ -992,7 +904,7 @@ button {
         height: 15px;
         width: 15px;
         margin: 0 3px;
-        background-color: #bbbbbb;
+        background-color: #bbb;
         border: none;
         border-radius: 50%;
         display: inline-block;
