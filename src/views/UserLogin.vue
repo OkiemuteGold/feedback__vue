@@ -332,6 +332,11 @@ main {
     }
 }
 
+// hr {
+//     margin-top: 1.5rem;
+//     margin-bottom: 1.5rem;
+// }
+
 .nav-pills .nav-link {
     text-transform: uppercase;
     color: var(--customBlue);

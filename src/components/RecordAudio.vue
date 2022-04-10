@@ -1,44 +1,60 @@
 <template>
     <div class="record">
-        <p>Record and Play audio</p>
+        <!-- <p>Record and Play audio</p> -->
 
-        <div class="record_action_buttons">
-            <button id="btnRecord" class="btn btn-success me-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                    <path
-                        d="M256 152a104 104 0 1 0 104 104 104 104 0 0 0-104-104zm0 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24zm0-272C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 376a128 128 0 1 1 128-128 128 128 0 0 1-128 128z"
-                    />
-                </svg>
-                <span>Record</span>
-            </button>
-            <button id="btnStop" class="btn btn-danger me-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path
-                        d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"
-                    />
-                </svg>
-                <span>Stop</span>
-            </button>
-            <button id="btnPlay" class="btn btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path
-                        d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"
-                    />
-                </svg>
-                <span>Play</span>
-            </button>
+        <div v-if="notAvailable">
+            <div class="record_action_buttons">
+                <button id="btnRecord" class="btn btn-success me-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                    >
+                        <path
+                            d="M256 152a104 104 0 1 0 104 104 104 104 0 0 0-104-104zm0 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24zm0-272C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 376a128 128 0 1 1 128-128 128 128 0 0 1-128 128z"
+                        />
+                    </svg>
+                    <span>Record</span>
+                </button>
+                <button id="btnStop" class="btn btn-danger me-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                    >
+                        <path
+                            d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z"
+                        />
+                    </svg>
+                    <span>Stop</span>
+                </button>
+                <button id="btnPlay" class="btn btn-primary">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                    >
+                        <path
+                            d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"
+                        />
+                    </svg>
+                    <span>Play</span>
+                </button>
+            </div>
+
+            <!--for play the audio-->
+            <audio id="audioPlay" controls></audio>
         </div>
 
-        <!--for play the audio-->
-        <audio id="audioPlay" controls></audio>
+        <p v-if="!notAvailable">Not currently available</p>
     </div>
 </template>
 
 <script>
 export default {
+    props: ["notAvailable"],
+
     data() {
         return {};
     },
+
     methods: {
         initializeRecording() {
             const btnRecord = document.getElementById("btnRecord");

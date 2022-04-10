@@ -860,7 +860,7 @@ textarea {
 
             label,
             input[type="radio"] {
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.65rem;
             }
         }
     }

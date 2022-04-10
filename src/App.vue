@@ -36,6 +36,11 @@ body {
     box-sizing: border-box;
     color: var(--customText);
     overflow-x: hidden;
+
+    hr {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 }
 
 .logoutBtn,

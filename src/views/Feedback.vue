@@ -71,7 +71,7 @@
                     role="tabpanel"
                     aria-labelledby="pills-profile-tab"
                 >
-                    <div class="audio_buttons">
+                    <div class="audio_buttons" v-if="notAvailable">
                         <button
                             class="btn"
                             v-if="!recordAudio"
@@ -104,8 +104,15 @@
                         </button>
                     </div>
 
-                    <UploadAudio v-if="recordAudio" />
-                    <RecordAudio v-else />
+                    <div v-if="notAvailable">
+                        <UploadAudio v-if="recordAudio" />
+                        <RecordAudio v-else :notAvailable="notAvailable" />
+                    </div>
+
+                    <p v-else class="text-white text-center">
+                        Not currently available <br />
+                        Please use the form!
+                    </p>
                 </div>
             </div>
         </main>
@@ -128,6 +135,7 @@ export default {
         return {
             instructionText: "How do you want to submit your feedback?",
             recordAudio: true,
+            notAvailable: false,
 
             form: {
                 fullname: null,
@@ -164,7 +172,7 @@ export default {
     mounted() {
         setTimeout(() => {
             this.logout();
-        }, 10000 * 6 * 60);
+        }, 10000 * 6 * 600);
     },
 };
 </script>
