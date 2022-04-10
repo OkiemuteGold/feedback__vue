@@ -14,6 +14,7 @@
                 name="audioUpload"
                 id="audioUpload"
                 class="inputs form-control"
+                multiple
                 accept="audio/*"
                 v-if="!showField"
                 @input="getAudio($event)"
@@ -247,13 +248,19 @@ export default {
             this.getFiles(allFiles);
             this.dragAndDropMessage = "Drop audio files here";
 
-            let audio = dt.files[0];
-            this.sendToFirebaseStorage(audio);
+            // let audio = dt.files[0];
+            let audios = dt.files;
+            audios.forEach((audio) => {
+                this.sendToFirebaseStorage(audio);
+            });
         },
 
         newAudioUpload(event) {
-            let audio = event.target.files[0];
-            this.sendToFirebaseStorage(audio);
+            // let audio = event.target.files[0];
+            let audios = event.target.files;
+            audios.forEach((audio) => {
+                this.sendToFirebaseStorage(audio);
+            });
         },
 
         updateFileMetaWithId(audioRefId, audio) {
