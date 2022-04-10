@@ -77,6 +77,7 @@ export default {
 
             lastModifiedDate: "",
             audioSize: "",
+            audioUrl: "",
 
             successMessage: "",
             dragAndDropMessage: "Drop audio files here",
@@ -173,6 +174,7 @@ export default {
                         audioName: name,
                         audioSize: this.audioSize,
                         lastModifiedDate: this.lastModifiedDate,
+                        audioUrl: this.audioUrl,
                     };
 
                     array.push(fileObj);
@@ -195,9 +197,46 @@ export default {
                 .storage()
                 .ref("audioFeedbacks/" + audio.name);
 
-            storageRef.put(audio);
+            const metadata = {
+                customMetadata: {
+                    location: "Nigeria",
+                    activity: "Feedback",
+                },
+            };
 
-            console.log(audio);
+            let uploadTask = storageRef.put(audio, metadata);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log("Upload is " + progress + "% done");
+
+                    switch (snapshot.state) {
+                        case "paused":
+                            console.log("Upload is paused");
+                            break;
+                        case "running":
+                            console.log("Upload is running");
+                            break;
+                    }
+                },
+                (error) => {
+                    console.log(error);
+                },
+                () => {
+                    uploadTask.snapshot.ref
+                        .getDownloadURL()
+                        .then((downloadUrl) => {
+                            this.audioUrl = downloadUrl;
+
+                            console.log("File available at", downloadUrl);
+                        });
+                }
+            );
+
+            console.log(audio, this.audioUrl);
         },
 
         initDragAndDrop(event) {
@@ -212,47 +251,33 @@ export default {
             this.sendToFirebaseStorage(audio);
         },
 
-        // uploadAudioFile(audio) {
-        //     const metadata = {
-        //         customMetadata: {
-        //             location: "Nigeria",
-        //             activity: "Feedback",
-        //         },
-        //         contentType: "audio/mp3",
-        //         name: audio.audioName,
-        //         size: audio.audioSize,
-        //     };
-
-        //     if (audio) {
-        //         var storageRef = fbase
-        //             .storage()
-        //             .ref("audioFeedbacks/" + audio.audioName);
-
-        //         let uploadTask = storageRef.put(audio, metadata);
-
-        //         uploadTask.on(
-        //             "state_changed",
-        //             (snapshot) => {
-        //                 console.log(snapshot);
-        //             },
-        //             (error) => {
-        //                 console.log(error);
-        //             },
-        //             () => {
-        //                 uploadTask.snapshot.ref
-        //                     .getDownloadURL()
-        //                     .then((downloadUrl) => {
-        //                         this.audioFiles.push(downloadUrl);
-        //                         console.log("File available at", downloadUrl);
-        //                     });
-        //             }
-        //         );
-        //     }
-        // },
-
         newAudioUpload(event) {
             let audio = event.target.files[0];
             this.sendToFirebaseStorage(audio);
+        },
+
+        updateFileMetaWithId(audioRefId, audio) {
+            var forestRef = fbase
+                .storage()
+                .ref("audioFeedbacks/" + audio.audioName);
+
+            // Create file metadata to update
+            var newMetadata = {
+                customMetadata: {
+                    documentReferenceID: audioRefId,
+                },
+            };
+
+            // Update metadata properties
+            forestRef
+                .updateMetadata(newMetadata)
+                .then((metadata) => {
+                    console.log(metadata);
+                    return metadata;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
 
         addAudioFeedback() {
@@ -261,6 +286,7 @@ export default {
                 let audioFileData = {
                     Name: audio.audioName,
                     Size: audio.audioSize,
+                    DownloadUrl: this.audioUrl,
                     LastModifiedDate: audio.lastModifiedDate,
                     feedbackCreatedAt: this.convertEpochDate(new Date()),
                 };
@@ -272,6 +298,8 @@ export default {
                     .then((audioRef) => {
                         audioRef;
                         console.log("Audio written with ID: ", audioRef.id);
+
+                        this.updateFileMetaWithId(audioRef.id, audio);
                     })
                     .catch((err) => {
                         this.successMessage = err;
