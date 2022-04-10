@@ -43,6 +43,7 @@ body {
     }
 }
 
+.record_action_buttons .btn span,
 .logoutBtn,
 #regForm,
 input,

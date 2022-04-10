@@ -1,5 +1,5 @@
 <template>
-    <form id="audioForm" @submit.prevent="submitAudioFeedback()">
+    <form id="audioForm" @submit.prevent="submitFeedbackReference()">
         <div class="tab_item">
             <div class="labels">
                 <label for="audioUpload" @click="hideDragDropField()"
@@ -15,9 +15,9 @@
                 id="audioUpload"
                 class="inputs form-control"
                 accept="audio/*"
-                multiple
                 v-if="!showField"
                 @input="getAudio($event)"
+                @change="newAudioUpload($event)"
             />
 
             <p>{{ successMessage }}</p>
@@ -47,16 +47,18 @@
                 v-if="showField && !showFileInfo"
                 id="drag_and_drop"
                 class="file_info_container drag_and_drop"
-                @dragenter="preventDefStopProp($event)"
-                @dragover="preventDefStopProp($event)"
+                @dragenter="atDragEnterOver($event)"
+                @dragover="atDragEnterOver($event)"
+                @dragleave="atDragLeave($event)"
                 @drop="initDragAndDrop($event)"
+                @dragend="newAudioUpload($event)"
             >
-                <p>Drop audio files here</p>
+                <p>{{ dragAndDropMessage }}</p>
             </div>
         </div>
 
         <button type="submit" :disabled="!showFileInfo" class="btn btn-success">
-            Upload Audio
+            Upload Reference
         </button>
     </form>
 </template>
@@ -64,8 +66,7 @@
 <script>
 // import $ from "jquery";
 import "@/mixins";
-import { db } from "../firebase";
-// import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { db, fbase } from "../firebase";
 
 export default {
     data() {
@@ -74,15 +75,23 @@ export default {
             showField: false,
             audioFiles: null,
 
-            // audio: null,
             lastModifiedDate: "",
             audioSize: "",
 
             successMessage: "",
+            dragAndDropMessage: "Drop audio files here",
         };
     },
 
     methods: {
+        showSuccessMessage() {
+            this.successMessage = "Done! Please submit another feedback.";
+
+            setTimeout(() => {
+                this.successMessage = "";
+            }, 4000);
+        },
+
         hideDragDropField() {
             this.showField = false;
         },
@@ -95,6 +104,16 @@ export default {
         preventDefStopProp(event) {
             event.stopPropagation();
             event.preventDefault();
+        },
+
+        atDragEnterOver(event) {
+            this.preventDefStopProp(event);
+            this.dragAndDropMessage = "Release files to upload";
+        },
+
+        atDragLeave(event) {
+            this.preventDefStopProp(event);
+            this.dragAndDropMessage = "Drop audio files here";
         },
 
         convertEpochDate(date) {
@@ -143,7 +162,6 @@ export default {
 
             if (allFiles.length > 0) {
                 allFiles.forEach((file) => {
-                    let type = file.type;
                     let name = file.name;
                     let epochDate = file.lastModifiedDate;
                     this.convertEpochDate(epochDate);
@@ -152,7 +170,6 @@ export default {
                     this.validateSize(fileSize);
 
                     let fileObj = {
-                        audioType: type,
                         audioName: name,
                         audioSize: this.audioSize,
                         lastModifiedDate: this.lastModifiedDate,
@@ -173,22 +190,70 @@ export default {
             this.getFiles(allFiles);
         },
 
+        sendToFirebaseStorage(audio) {
+            var storageRef = fbase
+                .storage()
+                .ref("audioFeedbacks/" + audio.name);
+
+            storageRef.put(audio);
+
+            console.log(audio);
+        },
+
         initDragAndDrop(event) {
             this.preventDefStopProp(event);
 
             const dt = event.dataTransfer;
             let allFiles = dt.files;
             this.getFiles(allFiles);
+            this.dragAndDropMessage = "Drop audio files here";
+
+            let audio = dt.files[0];
+            this.sendToFirebaseStorage(audio);
         },
 
-        // readAudioFile(audio) {
-        //     var reader = new FileReader();
-        //     reader.addEventListener("load", function (e) {
-        //         let result = e;
-        //         console.log(result);
-        //     });
-        //     reader.readAsText(audio.audioName);
+        // uploadAudioFile(audio) {
+        //     const metadata = {
+        //         customMetadata: {
+        //             location: "Nigeria",
+        //             activity: "Feedback",
+        //         },
+        //         contentType: "audio/mp3",
+        //         name: audio.audioName,
+        //         size: audio.audioSize,
+        //     };
+
+        //     if (audio) {
+        //         var storageRef = fbase
+        //             .storage()
+        //             .ref("audioFeedbacks/" + audio.audioName);
+
+        //         let uploadTask = storageRef.put(audio, metadata);
+
+        //         uploadTask.on(
+        //             "state_changed",
+        //             (snapshot) => {
+        //                 console.log(snapshot);
+        //             },
+        //             (error) => {
+        //                 console.log(error);
+        //             },
+        //             () => {
+        //                 uploadTask.snapshot.ref
+        //                     .getDownloadURL()
+        //                     .then((downloadUrl) => {
+        //                         this.audioFiles.push(downloadUrl);
+        //                         console.log("File available at", downloadUrl);
+        //                     });
+        //             }
+        //         );
+        //     }
         // },
+
+        newAudioUpload(event) {
+            let audio = event.target.files[0];
+            this.sendToFirebaseStorage(audio);
+        },
 
         addAudioFeedback() {
             let audioFiles = this.audioFiles;
@@ -196,7 +261,6 @@ export default {
                 let audioFileData = {
                     Name: audio.audioName,
                     Size: audio.audioSize,
-                    // Type: audio.audioType,
                     LastModifiedDate: audio.lastModifiedDate,
                     feedbackCreatedAt: this.convertEpochDate(new Date()),
                 };
@@ -207,11 +271,7 @@ export default {
                     .add(audioFileData)
                     .then((audioRef) => {
                         audioRef;
-                        console.log(
-                            "Audio written with ID: ",
-                            audioRef,
-                            audioRef.id
-                        );
+                        console.log("Audio written with ID: ", audioRef.id);
                     })
                     .catch((err) => {
                         this.successMessage = err;
@@ -220,17 +280,13 @@ export default {
             });
         },
 
-        submitAudioFeedback() {
+        submitFeedbackReference() {
             this.addAudioFeedback();
             this.resetFeedbackData();
 
             this.showFileInfo = false;
 
-            this.successMessage = "Done! Please submit another feedback.";
-
-            setTimeout(() => {
-                this.successMessage = "";
-            }, 4000);
+            this.showSuccessMessage();
         },
     },
 };
@@ -263,6 +319,7 @@ export default {
             width: fit-content;
             padding: 0.125rem 0.5rem;
             margin-bottom: 0.625rem;
+            cursor: pointer;
         }
     }
 

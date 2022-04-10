@@ -71,7 +71,7 @@
                     role="tabpanel"
                     aria-labelledby="pills-profile-tab"
                 >
-                    <div class="audio_buttons" v-if="notAvailable">
+                    <div class="audio_buttons" v-if="!notAvailable">
                         <button
                             class="btn"
                             v-if="!recordAudio"
@@ -104,7 +104,7 @@
                         </button>
                     </div>
 
-                    <div v-if="notAvailable">
+                    <!-- <div v-if="notAvailable">
                         <UploadAudio v-if="recordAudio" />
                         <RecordAudio v-else :notAvailable="notAvailable" />
                     </div>
@@ -112,7 +112,10 @@
                     <p v-else class="text-white text-center">
                         Not currently available <br />
                         Please use the form!
-                    </p>
+                    </p> -->
+
+                    <UploadAudio v-if="recordAudio" />
+                    <RecordAudio v-else :notAvailable="notAvailable" />
                 </div>
             </div>
         </main>

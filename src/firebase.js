@@ -1,10 +1,13 @@
 // < !--The core Firebase JS SDK is always required and must be listed first-- >
 
 // import firebase from 'firebase/app';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import "firebase/firebase-firestore";
+import "firebase/firebase-auth";
+import "firebase/firebase-analytics";
+import "firebase/firebase-storage";
+
 require("firebase/firestore");
-// import "firebase/auth";
-// import "firebase/analytics";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
