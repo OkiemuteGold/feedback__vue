@@ -16,14 +16,14 @@
 
             <div class="form-group tab" v-if="!isShownNewRespose">
                 <div class="tab_item">
-                    <label for="marketerName">Marketer</label>
+                    <label for="promoterName">Promoter</label>
                     <input
                         class="inputs form-control mb-0"
                         type="text"
-                        id="marketerName"
-                        name="marketerName"
+                        id="promoterName"
+                        name="promoterName"
                         placeholder="Full name"
-                        v-model="marketerName"
+                        v-model="promoterName"
                     />
                 </div>
 
@@ -79,10 +79,6 @@
                             v-for="genderItem in genders"
                             :key="genderItem.code"
                         >
-                            <label :for="genderItem.code">{{
-                                genderItem.name
-                            }}</label>
-
                             <input
                                 class="inputs"
                                 type="radio"
@@ -90,6 +86,10 @@
                                 :value="genderItem.code"
                                 v-model="gender"
                             />
+
+                            <label :for="genderItem.code">{{
+                                genderItem.name
+                            }}</label>
                         </div>
                     </div>
                 </div>
@@ -99,10 +99,6 @@
 
                     <div class="radio_inputs" id="ageInput">
                         <div v-for="ageItem in ages" :key="ageItem.code">
-                            <label :for="ageItem.code">{{
-                                ageItem.name
-                            }}</label>
-
                             <input
                                 class="inputs"
                                 type="radio"
@@ -110,6 +106,10 @@
                                 :value="`${ageItem.name} years`"
                                 v-model="age"
                             />
+
+                            <label :for="ageItem.code">{{
+                                ageItem.name
+                            }}</label>
                         </div>
                     </div>
                 </div>
@@ -345,7 +345,7 @@ export default {
             showSubmitBtn: false,
             isShownNewRespose: false,
 
-            marketerName: "",
+            promoterName: "",
             consumerName: "",
             consumerEmail: "",
             consumerPhone: "",
@@ -376,7 +376,7 @@ export default {
 
         isValidTab1() {
             return (
-                this.marketerName !== "" &&
+                this.promoterName !== "" &&
                 this.consumerName !== "" &&
                 this.consumerPhone !== "" &&
                 this.consumerAddress !== "" &&
@@ -484,7 +484,7 @@ export default {
 
         addFormFeedback() {
             let feedbackData = {
-                Marketer: this.marketerName,
+                Marketer: this.promoterName,
                 Consumer: this.consumerName,
                 consumerEmail: this.consumerEmail,
                 consumerPhone: this.consumerPhone,
@@ -546,7 +546,7 @@ export default {
         // if last form... submit
         submitForm() {
             // console.log(
-            //     this.marketerName,
+            //     this.promoterName,
             //     this.consumerName,
             //     this.consumerEmail,
             //     this.consumerPhone,
@@ -721,7 +721,7 @@ export default {
     },
 
     mounted() {
-        this.currentTab = 0;
+        this.currentTab = 1;
         this.showTab(this.currentTab);
         this.removeErrorMessage();
     },
@@ -863,8 +863,8 @@ textarea {
     }
 
     & input[type="radio"] {
-        width: fit-content;
-        height: auto;
+        // width: fit-content;
+        // height: auto;
         margin-bottom: 0;
         margin-right: 0.5rem;
         cursor: pointer;

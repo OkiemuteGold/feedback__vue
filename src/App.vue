@@ -61,7 +61,64 @@ body {
 
     ::-webkit-scrollbar-thumb:hover {
         background: #9a9a9a;
-        // box-shadow: inset 0 1px 5px #bbb;
+    }
+
+    input[type="radio"] {
+        accent-color: var(--customBlueLight);
+        width: 0.875rem;
+        height: 0.875rem;
+    }
+
+    input[type="radio"] {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 0.25rem;
+        -webkit-appearance: none;
+        appearance: none;
+        display: grid;
+        place-content: center;
+
+        font: inherit;
+        border: 0.075rem solid rgba(105, 105, 105, 0.5);
+    }
+
+    input[type="radio"]::before {
+        content: "";
+        width: 0.75rem;
+        height: 0.45rem;
+        border-left: 0.1rem solid var(--customBlueLight);
+        border-bottom: 0.1rem solid var(--customBlueLight);
+        border-radius: 0.125rem;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+    }
+
+    input[type="radio"]:focus,
+    input[type="radio"]:checked {
+        background: rgba(105, 105, 105, 0.3);
+        border-color: transparent;
+        outline: max(0rem, 0.015rem) solid rgba(105, 105, 105, 0.3);
+        outline-offset: max(0rem, 0.125rem);
+    }
+
+    input[type="radio"]:focus {
+        outline-offset: max(0rem, 0.15rem);
+    }
+
+    input[type="radio"]:checked::before {
+        transform: scale(1) rotate(-30deg) translate(1px, -1.5px);
+        animation: checkMark 0.65s ease-in-out;
+    }
+
+    @keyframes checkMark {
+        from {
+            height: 0.45rem;
+            width: 0rem;
+        }
+        to {
+            height: 0.45rem;
+            width: 0.75rem;
+        }
     }
 }
 
