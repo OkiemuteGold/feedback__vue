@@ -1,10 +1,18 @@
 export default [
     {
         id: "1",
-        value: "I am allergic to such aroma",
+        value: "It has sour taste",
     },
     {
         id: "2",
-        value: "The product has a sour taste",
+        value: "It is not sweet",
+    },
+    {
+        id: "3",
+        value: "It does not have enough strawberry",
+    },
+    {
+        id: "4",
+        value: "It gives a nauseous feeling",
     },
 ];

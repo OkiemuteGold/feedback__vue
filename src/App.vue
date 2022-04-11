@@ -41,8 +41,33 @@ body {
         margin-top: 1.5rem;
         margin-bottom: 1.5rem;
     }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #fff;
+        border-radius: 10px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #bbb;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #9a9a9a;
+        // box-shadow: inset 0 1px 5px #bbb;
+    }
 }
 
+::-webkit-scrollbar,
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb,
 .record_action_buttons .btn span,
 .logoutBtn,
 #regForm,
