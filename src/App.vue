@@ -63,11 +63,11 @@ body {
         background: #9a9a9a;
     }
 
-    input[type="radio"] {
-        accent-color: var(--customBlueLight);
-        width: 0.875rem;
-        height: 0.875rem;
-    }
+    // input[type="radio"] {
+    //     accent-color: var(--customBlueLight);
+    //     width: 0.875rem;
+    //     height: 0.875rem;
+    // }
 
     input[type="radio"] {
         width: 1rem;
