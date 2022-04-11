@@ -2,7 +2,19 @@
     <div class="record">
         <!-- <p>Record and Play audio</p> -->
 
-        <div v-if="!notAvailable">
+        <div v-if="notAvailable">
+            <div class="tab_item">
+                <label for="name">Consumer name</label>
+                <input
+                    class="inputs form-control mb-0"
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Please enter consumer name"
+                    v-model="consumerName"
+                />
+            </div>
+
             <div class="record_action_buttons">
                 <button
                     id="btnRecord"
@@ -71,6 +83,7 @@
                 type="submit"
                 :disabled="!stoppedRecording"
                 class="btn btn-success"
+                @click="sendToFirebaseStorage()"
             >
                 Upload Audio
             </button>
@@ -81,6 +94,9 @@
 </template>
 
 <script>
+import "@/mixins";
+import { db, fbase } from "../firebase";
+
 export default {
     props: ["notAvailable"],
 
@@ -90,6 +106,10 @@ export default {
             notStartedRecording: true,
             stoppedRecording: false,
             recordStateMessage: "",
+
+            consumerName: "",
+            recordedAudio: null,
+            // audioUrl: "",
         };
     },
 
@@ -172,6 +192,9 @@ export default {
                         mediaRecorder.ondataavailable = function (e) {
                             chunks.push(e.data);
 
+                            this.recordedAudio = chunks[0];
+                            console.log(this.recordedAudio);
+
                             btnPlay.onclick = function () {
                                 audioPlayer.play();
                             };
@@ -187,8 +210,9 @@ export default {
                         mediaRecorder.onstop = function () {
                             console.log("recorder stopped");
 
+                            // type: ["audio/ogg; codecs=opus"],
                             const blob = new Blob(chunks, {
-                                type: ["audio/ogg; audio/mp3; codecs=opus"],
+                                type: "audio/mp3",
                             });
 
                             chunks = [];
@@ -204,6 +228,107 @@ export default {
             } else {
                 console.log("getUserMedia not supported on your browser!");
             }
+        },
+
+        sendToFirebaseStorage() {
+            let audio = this.recordedAudio;
+            let consumerName = this.consumerName;
+
+            var storageRef = fbase
+                .storage()
+                .ref("RecordedFeedbacks/" + consumerName);
+
+            const metadata = {
+                customMetadata: {
+                    location: "Nigeria",
+                    activity: "Recorded Feedback",
+                },
+                contentType: "audio/mp3",
+            };
+
+            let uploadTask = storageRef.put(audio, metadata);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log("Upload is " + progress + "% done");
+
+                    switch (snapshot.state) {
+                        case "paused":
+                            console.log("Upload is paused");
+                            break;
+                        case "running":
+                            console.log("Upload is running");
+                            break;
+                    }
+                },
+                (error) => {
+                    console.log(error);
+                },
+                () => {
+                    uploadTask.snapshot.ref
+                        .getDownloadURL()
+                        .then((downloadUrl) => {
+                            // this.audioUrl = downloadUrl;
+
+                            this.addAudioFeedback(audio, downloadUrl);
+
+                            console.log("File available at", downloadUrl);
+                        });
+                }
+            );
+
+            console.log(audio);
+        },
+
+        updateFileMetaWithId(audioRefId) {
+            let consumerName = this.consumerName;
+
+            var forestRef = fbase
+                .storage()
+                .ref("RecordedFeedbacks/" + consumerName);
+
+            var newMetadata = {
+                customMetadata: {
+                    recordedDocumentReferenceID: audioRefId,
+                },
+            };
+
+            forestRef
+                .updateMetadata(newMetadata)
+                .then((metadata) => {
+                    console.log(metadata);
+                    return metadata;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+
+        addAudioFeedback(audio, downloadUrl) {
+            let recordedData = {
+                Name: this.consumerName,
+                Size: audio.size,
+                DownloadUrl: downloadUrl,
+                feedbackCreatedAt: this.convertEpochDate(new Date()),
+            };
+
+            console.log(recordedData);
+
+            db.collection("RecordedFeedbacks")
+                .add(recordedData)
+                .then((audioRef) => {
+                    audioRef;
+                    console.log("Audio written with ID: ", audioRef.id);
+
+                    this.updateFileMetaWithId(audioRef.id);
+                })
+                .catch((err) => {
+                    this.successMessage = err;
+                    console.log(err);
+                });
         },
     },
 
@@ -225,6 +350,20 @@ export default {
     audio {
         width: 100%;
         margin-bottom: 1.25rem;
+    }
+}
+
+.tab_item {
+    margin-bottom: 2rem;
+
+    & * {
+        font-size: 15px;
+    }
+
+    label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        text-transform: capitalize;
     }
 }
 
