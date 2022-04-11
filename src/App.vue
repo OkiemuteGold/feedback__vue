@@ -86,10 +86,14 @@ body {
         content: "";
         width: 0.75rem;
         height: 0.45rem;
-        border-left: 0.1rem solid var(--customBlueLight);
-        border-bottom: 0.1rem solid var(--customBlueLight);
+        border-left: 0.15rem solid var(--customBlueLight);
+        border-bottom: 0.15rem solid var(--customBlueLight);
         border-radius: 0.125rem;
         transform: scale(0);
+        /* for checkmark shape
+            transform-origin: bottom left;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        */
         transition: 120ms transform ease-in-out;
     }
 
