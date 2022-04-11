@@ -28,6 +28,7 @@
                 </div>
 
                 <h3 class="tab_title mt-5">Consumer Info</h3>
+                <p>All fields are required**</p>
 
                 <div
                     class="tab_item"
@@ -142,20 +143,24 @@
                     </select>
                 </div>
 
-                <div class="tab_item">
-                    <label for="feedbackTaste">Feedback on taste</label>
+                <!-- <div class="tab_item">
+                    <label for="feedbackTaste" class="question_label"
+                        >How would you rate the taste?</label
+                    >
                     <select id="feedbackTaste" v-model="tasteOption">
                         <option disabled value="">
-                            Select feedback on taste
+                            Select ratings on taste
                         </option>
                         <option v-for="option in tasteOptions" :key="option.id">
                             {{ option.value }}
                         </option>
                     </select>
-                </div>
+                </div> -->
 
-                <div class="tab_item">
-                    <label for="feedbackPackaging">Feedback on packaging</label>
+                <!-- <div class="tab_item">
+                    <label for="feedbackPackaging" class="question_label"
+                        >Feedback on packaging</label
+                    >
                     <select id="feedbackPackaging" v-model="packagingOption">
                         <option disabled value="">
                             Select feedback on packaging
@@ -167,7 +172,7 @@
                             {{ option.value }}
                         </option>
                     </select>
-                </div>
+                </div> -->
 
                 <div
                     class="tab_item"
@@ -176,7 +181,8 @@
                 >
                     <label :for="singleRating.id" class="question_label">
                         <span>{{ singleRating.label }}</span>
-                        <ul>
+
+                        <!-- <ul>
                             (
                             <li
                                 v-for="rating in singleRating.ratings"
@@ -185,7 +191,7 @@
                                 {{ rating.value }}: {{ rating.code }}
                             </li>
                             )
-                        </ul>
+                        </ul> -->
                     </label>
 
                     <div class="radio_inputs" :id="singleRating.id">
@@ -193,10 +199,6 @@
                             v-for="rating in singleRating.ratings"
                             :key="rating.name + rating.code"
                         >
-                            <label :for="rating.name + rating.code">{{
-                                rating.code
-                            }}</label>
-
                             <input
                                 class="inputs"
                                 type="radio"
@@ -205,11 +207,15 @@
                                 :value="rating.value"
                                 @input="getRatings($event)"
                             />
+
+                            <label :for="rating.name + rating.code">{{
+                                rating.value
+                            }}</label>
                         </div>
                     </div>
                 </div>
 
-                <div class="tab_item">
+                <!-- <div class="tab_item">
                     <label for="tasteLike" class="question_label">
                         <span>What do you like about the taste?</span>
                     </label>
@@ -222,9 +228,9 @@
                             {{ option.value }}
                         </option>
                     </select>
-                </div>
+                </div> -->
 
-                <div class="tab_item">
+                <!-- <div class="tab_item">
                     <label for="tasteDislike" class="question_label">
                         <span>What do you dislike about the taste?</span>
                     </label>
@@ -239,7 +245,7 @@
                             {{ option.value }}
                         </option>
                     </select>
-                </div>
+                </div> -->
             </div>
 
             <div class="form-group tab">
@@ -308,8 +314,8 @@ import genders from "@/api/genders";
 import ages from "@/api/ages";
 import consumerInfos from "@/api/consumerInfos";
 import ratings from "@/api/ratings";
-import packagingOptions from "@/api/packagingOptions";
-import tasteOptions from "@/api/tasteOptions";
+// import packagingOptions from "@/api/packagingOptions";
+// import tasteOptions from "@/api/tasteOptions";
 import samplingOptions from "@/api/samplingOptions";
 import tasteLikeOptions from "@/api/tasteLikeOptions";
 import tasteDislikeOptions from "@/api/tasteDislikeOptions";
@@ -322,8 +328,8 @@ export default {
             ages,
             consumerInfos,
             ratings,
-            packagingOptions,
-            tasteOptions,
+            // packagingOptions,
+            // tasteOptions,
             samplingOptions,
             tasteLikeOptions,
             tasteDislikeOptions,
@@ -763,6 +769,13 @@ export default {
 /* hide all steps by default: */
 .tab {
     display: none;
+
+    & p {
+        color: #fff;
+        font-size: 15px;
+        font-style: italic;
+        text-transform: initial;
+    }
 }
 
 .button_container {
@@ -780,10 +793,11 @@ export default {
 
 .tab_item label {
     display: inline-block;
-    font-size: 15px;
+    font-size: 1rem;
     margin-bottom: 0.5rem;
     text-transform: capitalize;
 
+    &.question_label,
     &.question_label span {
         text-transform: initial;
     }
@@ -843,14 +857,16 @@ textarea {
 
     & label {
         margin-bottom: 0;
-        margin-right: 0.5rem;
+        margin-right: 1.5rem;
+        font-size: 15px;
+        // color: #bbb;
     }
 
     & input[type="radio"] {
         width: fit-content;
         height: auto;
         margin-bottom: 0;
-        margin-right: 1.5rem;
+        margin-right: 0.5rem;
         cursor: pointer;
     }
 
@@ -896,30 +912,30 @@ button {
 }
 
 /* steps */
-.indicators {
-    text-align: center;
-    margin-top: 40px;
+// .indicators {
+//     text-align: center;
+//     margin-top: 40px;
 
-    & .step {
-        height: 15px;
-        width: 15px;
-        margin: 0 3px;
-        background-color: #bbb;
-        border: none;
-        border-radius: 50%;
-        display: inline-block;
-        opacity: 0.5;
+//     & .step {
+//         height: 15px;
+//         width: 15px;
+//         margin: 0 3px;
+//         background-color: #bbb;
+//         border: none;
+//         border-radius: 50%;
+//         display: inline-block;
+//         opacity: 0.5;
 
-        &.active {
-            opacity: 1;
-        }
+//         &.active {
+//             opacity: 1;
+//         }
 
-        /* steps that's finished and valid: */
-        &.finish {
-            background-color: #04aa6d;
-        }
-    }
-}
+//         /* steps that's finished and valid: */
+//         &.finish {
+//             background-color: #04aa6d;
+//         }
+//     }
+// }
 
 /* new feedback --------- */
 .new_feedback_container {

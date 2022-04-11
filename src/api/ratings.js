@@ -1,69 +1,85 @@
 export default [
     {
-        id: "appearanceRatingsInput",
-        label: "How do you see the appearance of the product you just tasted?",
+        id: "tasteRatingsInput",
+        label: "How would you rate the taste?",
         ratings: [
             {
-                name: "appearanceRatings",
-                value: "Very good",
-                code: "5"
-            },
-            {
-                name: "appearanceRatings",
-                value: "Good",
+                name: "tasteRatings",
+                value: "Very sweet",
                 code: "4"
             },
             {
-                name: "appearanceRatings",
-                value: "Fair",
+                name: "tasteRatings",
+                value: "Sweet",
                 code: "3"
             },
             {
-                name: "appearanceRatings",
-                value: "Poor",
+                name: "tasteRatings",
+                value: "Sour",
                 code: "2"
             },
             {
-                name: "appearanceRatings",
-                value: "Bad",
+                name: "tasteRatings",
+                value: "Tasteless",
                 code: "1"
             },
         ]
     },
     {
-        id: "tasteRatingsInput",
-        label: "How sweet is the product you just tasted?",
+        id: "experienceRatingsInput",
+        label: "How would you rate your experience of the product?",
         ratings: [
             {
-                name: "tasteRatings",
-                value: "Very sweet",
-                code: "5"
-            },
-            {
-                name: "tasteRatings",
-                value: "Sweet",
+                name: "experienceRatings",
+                value: "Great",
                 code: "4"
             },
             {
-                name: "tasteRatings",
-                value: "Fair",
+                name: "experienceRatings",
+                value: "Good",
                 code: "3"
             },
             {
-                name: "tasteRatings",
-                value: "Poor",
+                name: "experienceRatings",
+                value: "Bad",
                 code: "2"
             },
             {
-                name: "tasteRatings",
-                value: "Bad",
+                name: "experienceRatings",
+                value: "Disappointing",
+                code: "1"
+            },
+        ]
+    },
+    {
+        id: "packageRatingsInput",
+        label: "How do you rate the product packaging?",
+        ratings: [
+            {
+                name: "packageRatings",
+                value: "Attractive",
+                code: "4"
+            },
+            {
+                name: "packageRatings",
+                value: "Good",
+                code: "3"
+            },
+            {
+                name: "packageRatings",
+                value: "Indifferent",
+                code: "2"
+            },
+            {
+                name: "packageRatings",
+                value: "Disappointing",
                 code: "1"
             },
         ]
     },
     {
         id: "overallRatingsInput",
-        label: "What is your overall ratings for the product you just tasted?",
+        label: "Overall, how would you rate the product?",
         ratings: [
             {
                 name: "overallRatings",
@@ -88,6 +104,48 @@ export default [
             {
                 name: "overallRatings",
                 value: "Bad",
+                code: "1"
+            },
+        ]
+    },
+    {
+        id: "wouldBuyInput",
+        label: "Would you buy this product?",
+        ratings: [
+            {
+                name: "wouldBuy",
+                value: "Yes",
+                code: "3"
+            },
+            {
+                name: "wouldBuy",
+                value: "No",
+                code: "2"
+            },
+            {
+                name: "wouldBuy",
+                value: "Maybe",
+                code: "1"
+            },
+        ]
+    },
+    {
+        id: "wouldRecommendInput",
+        label: "Would you recommend this product to anyone?",
+        ratings: [
+            {
+                name: "wouldRecommend",
+                value: "Yes",
+                code: "3"
+            },
+            {
+                name: "wouldRecommend",
+                value: "No",
+                code: "2"
+            },
+            {
+                name: "wouldRecommend",
+                value: "Maybe",
                 code: "1"
             },
         ]
