@@ -12,6 +12,7 @@
                     name="name"
                     placeholder="Please enter consumer name"
                     v-model="consumerName"
+                    @input="uploadReferencePossible()"
                 />
             </div>
 
@@ -73,7 +74,9 @@
 
             <!--for play the audio-->
             <audio id="audioRecorder" muted></audio>
-            <p v-if="nowRecording">{{ recordStateMessage }}</p>
+            <p id="record_state_message" v-if="nowRecording || isInvalidInput">
+                {{ recordStateMessage }}
+            </p>
 
             <audio id="audioPlayer" controls>
                 Your browser does not support the <code>audio</code> element.
@@ -81,7 +84,7 @@
 
             <button
                 type="submit"
-                :disabled="!stoppedRecording"
+                :disabled="!stoppedRecording || isInvalidInput"
                 class="btn btn-success"
                 @click="sendToFirebaseStorage()"
             >
@@ -109,17 +112,34 @@ export default {
 
             consumerName: "",
             recordedAudio: null,
-            // audioUrl: "",
+            audioSize: "",
         };
     },
 
-    methods: {
-        changeRecordState(event) {
-            // const audioPlayer = document.getElementById("audioPlayer");
+    computed: {
+        isInvalidInput() {
+            return this.consumerName == "";
+        },
+    },
 
-            // // audioPlayer.addEventListener("ended", () => {
-            // //     this.stoppedRecording = true;
-            // // });
+    methods: {
+        uploadReferencePossible() {
+            if (this.consumerName == "") {
+                this.recordStateMessage =
+                    "Please enter a consumer name to upload.";
+            } else {
+                this.recordStateMessage = "";
+            }
+        },
+
+        changeRecordState(event) {
+            const audioPlayer = document.getElementById("audioPlayer");
+
+            audioPlayer.addEventListener("ended", () => {
+                // this.stoppedRecording = true;
+                this.recordStateMessage =
+                    "Please enter a consumer name to upload.";
+            });
 
             let svgPath = event.target.parentElement.id;
             let id = event.target.id;
@@ -141,7 +161,8 @@ export default {
                 svgPath == "btnStopIcon"
             ) {
                 this.stoppedRecording = true;
-                this.recordStateMessage = "Stopped recording!";
+                this.recordStateMessage =
+                    "Finished recording! Please enter a consumer name to upload.";
             } else if (
                 id == "btnPlay" ||
                 id == "btnPlayIcon" ||
@@ -193,7 +214,8 @@ export default {
                             chunks.push(e.data);
 
                             this.recordedAudio = chunks[0];
-                            console.log(this.recordedAudio);
+                            this.audioSize = this.recordedAudio.size;
+                            console.log(this.recordedAudio, this.audioSize);
 
                             btnPlay.onclick = function () {
                                 audioPlayer.play();
@@ -232,21 +254,22 @@ export default {
 
         sendToFirebaseStorage() {
             let audio = this.recordedAudio;
-            let consumerName = this.consumerName;
+            console.log(audio, this.audioSize);
 
-            var storageRef = fbase
-                .storage()
-                .ref("RecordedFeedbacks/" + consumerName);
+            let consumerName = this.consumerName;
+            let audioPath = "RecordedFeedbacks/" + consumerName;
+
+            var storageRef = fbase.storage().ref(audioPath);
 
             const metadata = {
                 customMetadata: {
                     location: "Nigeria",
-                    activity: "Recorded Feedback",
+                    activity: `${consumerName}'s recorded feedback`,
                 },
                 contentType: "audio/mp3",
             };
 
-            let uploadTask = storageRef.put(audio, metadata);
+            let uploadTask = storageRef.child("feedback").put(audio, metadata);
 
             uploadTask.on(
                 "state_changed",
@@ -272,23 +295,50 @@ export default {
                         .getDownloadURL()
                         .then((downloadUrl) => {
                             // this.audioUrl = downloadUrl;
-
-                            this.addAudioFeedback(audio, downloadUrl);
-
                             console.log("File available at", downloadUrl);
+
+                            if (downloadUrl) {
+                                this.addAudioFeedback(downloadUrl);
+                            }
                         });
                 }
             );
+        },
 
-            console.log(audio);
+        addAudioFeedback(downloadUrl) {
+            console.log(this.audioSize);
+            let consumerName = this.consumerName;
+
+            let recordedData = {
+                ConsumerName: consumerName,
+                Size: this.audioSize,
+                DownloadUrl: downloadUrl,
+                feedbackCreatedAt: this.convertEpochDate(new Date()),
+            };
+
+            console.log(recordedData);
+
+            db.collection("RecordedFeedbacks/")
+                .add(recordedData)
+                .then((audioRef) => {
+                    audioRef;
+                    console.log("Audio written with ID: ", audioRef.id);
+
+                    if (audioRef.id) {
+                        this.updateFileMetaWithId(audioRef.id);
+                    }
+                })
+                .catch((err) => {
+                    this.successMessage = err;
+                    console.log(err);
+                });
         },
 
         updateFileMetaWithId(audioRefId) {
             let consumerName = this.consumerName;
+            let audioPath = "RecordedFeedbacks/" + consumerName;
 
-            var forestRef = fbase
-                .storage()
-                .ref("RecordedFeedbacks/" + consumerName);
+            var forestRef = fbase.storage().ref(audioPath).child("feedback");
 
             var newMetadata = {
                 customMetadata: {
@@ -300,40 +350,23 @@ export default {
                 .updateMetadata(newMetadata)
                 .then((metadata) => {
                     console.log(metadata);
+                    this.consumerName = "";
+
                     return metadata;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-
-        addAudioFeedback(audio, downloadUrl) {
-            let recordedData = {
-                Name: this.consumerName,
-                Size: audio.size,
-                DownloadUrl: downloadUrl,
-                feedbackCreatedAt: this.convertEpochDate(new Date()),
-            };
-
-            console.log(recordedData);
-
-            db.collection("RecordedFeedbacks")
-                .add(recordedData)
-                .then((audioRef) => {
-                    audioRef;
-                    console.log("Audio written with ID: ", audioRef.id);
-
-                    this.updateFileMetaWithId(audioRef.id);
-                })
-                .catch((err) => {
-                    this.successMessage = err;
-                    console.log(err);
-                });
-        },
     },
 
     mounted() {
         this.initializeRecording();
+        this.uploadReferencePossible();
+
+        setTimeout(() => {
+            this.recordStateMessage = "";
+        }, 5000);
     },
 };
 </script>
@@ -364,12 +397,13 @@ export default {
         display: inline-block;
         margin-bottom: 0.5rem;
         text-transform: capitalize;
+        font-size: 16px;
     }
 }
 
 .record_action_buttons {
     display: flex;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 
     #btnRecord {
         background: var(--customBlue);
@@ -419,5 +453,10 @@ export default {
             }
         }
     }
+}
+
+#record_state_message {
+    font-style: italic;
+    text-transform: initial;
 }
 </style>

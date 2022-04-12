@@ -29,7 +29,6 @@ body {
 }
 
 #app {
-    // font-family: "Raleway", sans-serif;
     font-family: "Montserrat", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -72,14 +71,15 @@ body {
     input[type="radio"] {
         width: 1rem;
         height: 1rem;
-        border-radius: 0.25rem;
+        padding: 0.6rem 0.625rem;
         -webkit-appearance: none;
         appearance: none;
         display: grid;
         place-content: center;
 
         font: inherit;
-        border: 0.075rem solid rgba(105, 105, 105, 0.5);
+        border: 0.1rem solid rgba(105, 105, 105, 0.3);
+        border-radius: 0.25rem;
     }
 
     input[type="radio"]::before {
@@ -132,6 +132,7 @@ body {
 .record_action_buttons .btn span,
 .logoutBtn,
 #regForm,
+#audioForm .labels label,
 input,
 textarea,
 button {

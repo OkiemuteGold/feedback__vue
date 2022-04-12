@@ -1,6 +1,19 @@
 <template>
     <form id="audioForm" @submit.prevent="submitFeedbackReference()">
         <div class="tab_item">
+            <label for="name">Consumer name</label>
+            <input
+                class="inputs form-control mb-0"
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Please enter consumer name"
+                v-model="consumerName"
+                @input="uploadReferencePossible()"
+            />
+        </div>
+
+        <div class="tab_item">
             <div class="labels">
                 <label for="audioUpload" @click="hideDragDropField()"
                     >Upload audio</label
@@ -19,9 +32,12 @@
                 v-if="!showField"
                 @input="getAudio($event)"
                 @change="newAudioUpload($event)"
+                :disabled="isInvalidInput"
             />
 
-            <p>{{ successMessage }}</p>
+            <p id="record_state_message" v-if="isInvalidInput">
+                {{ successMessage }}
+            </p>
 
             <div v-if="showFileInfo" class="file_info_container">
                 <ul
@@ -45,7 +61,7 @@
             </div>
 
             <div
-                v-if="showField && !showFileInfo"
+                v-if="showField && !showFileInfo && !isInvalidInput"
                 id="drag_and_drop"
                 class="file_info_container drag_and_drop"
                 @dragenter="atDragEnterOver($event)"
@@ -58,7 +74,11 @@
             </div>
         </div>
 
-        <button type="submit" :disabled="!showFileInfo" class="btn btn-success">
+        <button
+            type="submit"
+            :disabled="!showFileInfo || isInvalidInput"
+            class="btn btn-success"
+        >
             Upload Reference
         </button>
     </form>
@@ -79,13 +99,36 @@ export default {
             lastModifiedDate: "",
             audioSize: "",
             audioUrl: "",
+            consumerName: "",
 
             successMessage: "",
             dragAndDropMessage: "Drop audio files here",
         };
     },
+    computed: {
+        isInvalidInput() {
+            return this.consumerName == "";
+        },
+    },
 
     methods: {
+        uploadReferencePossible() {
+            if (this.consumerName == "") {
+                this.successMessage =
+                    "Please enter a consumer name to upload reference.";
+            } else {
+                this.successMessage = "";
+            }
+            // if (this.showFileInfo == true) {
+            //     if (this.isInvalidInput) {
+            //         this.successMessage =
+            //             "Please enter a consumer name to upload reference.";
+            //     } else {
+            //         this.successMessage = "";
+            //     }
+            // }
+        },
+
         showSuccessMessage() {
             this.successMessage = "Done! Please submit another feedback.";
 
@@ -144,7 +187,6 @@ export default {
                     `;
             } else {
                 this.showFileInfo = true;
-                this.successMessage = "";
 
                 if (stringSize.length <= 6) {
                     this.audioSize = `
@@ -194,18 +236,19 @@ export default {
         },
 
         sendToFirebaseStorage(audio) {
-            var storageRef = fbase
-                .storage()
-                .ref("audioFeedbacks/" + audio.name);
+            let consumerName = this.consumerName;
+            let audioPath = "AudioFeedbacks/" + consumerName;
+
+            var storageRef = fbase.storage().ref(audioPath);
 
             const metadata = {
                 customMetadata: {
                     location: "Nigeria",
-                    activity: "Feedback",
+                    activity: `${consumerName}'s recorded feedback`,
                 },
             };
 
-            let uploadTask = storageRef.put(audio, metadata);
+            let uploadTask = storageRef.child(audio.name).put(audio, metadata);
 
             uploadTask.on(
                 "state_changed",
@@ -261,12 +304,16 @@ export default {
             audios.forEach((audio) => {
                 this.sendToFirebaseStorage(audio);
             });
+
+            this.uploadReferencePossible();
         },
 
-        updateFileMetaWithId(audioRefId, audio) {
-            var forestRef = fbase
-                .storage()
-                .ref("audioFeedbacks/" + audio.audioName);
+        updateFileMetaWithId(audioRefId, audioFileData) {
+            let consumerName = this.consumerName;
+            let audioName = audioFileData.Name;
+            let audioPath = "AudioFeedbacks/" + consumerName;
+
+            var forestRef = fbase.storage().ref(audioPath).child(audioName);
 
             // Create file metadata to update
             var newMetadata = {
@@ -280,6 +327,8 @@ export default {
                 .updateMetadata(newMetadata)
                 .then((metadata) => {
                     console.log(metadata);
+                    this.consumerName = "";
+
                     return metadata;
                 })
                 .catch((error) => {
@@ -288,9 +337,12 @@ export default {
         },
 
         addAudioFeedback() {
+            let consumerName = this.consumerName;
             let audioFiles = this.audioFiles;
+
             audioFiles.forEach((audio) => {
                 let audioFileData = {
+                    ConsumerName: consumerName,
                     Name: audio.audioName,
                     Size: audio.audioSize,
                     DownloadUrl: this.audioUrl,
@@ -300,13 +352,13 @@ export default {
 
                 console.log(audioFileData);
 
-                db.collection("audioFeedbacks")
+                db.collection("AudioFeedbacks")
                     .add(audioFileData)
                     .then((audioRef) => {
                         audioRef;
                         console.log("Audio written with ID: ", audioRef.id);
 
-                        this.updateFileMetaWithId(audioRef.id, audio);
+                        this.updateFileMetaWithId(audioRef.id, audioFileData);
                     })
                     .catch((err) => {
                         this.successMessage = err;
@@ -317,12 +369,20 @@ export default {
 
         submitFeedbackReference() {
             this.addAudioFeedback();
-            this.resetFeedbackData();
+            // this.resetFeedbackData();
 
             this.showFileInfo = false;
 
             this.showSuccessMessage();
         },
+    },
+
+    mounted() {
+        this.uploadReferencePossible();
+
+        setTimeout(() => {
+            this.recordStateMessage = "";
+        }, 5000);
     },
 };
 </script>
@@ -334,7 +394,12 @@ export default {
     }
 
     .tab_item {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+
+        label {
+            margin-bottom: 0.5rem;
+            font-size: 16px;
+        }
     }
 
     .labels {
@@ -342,25 +407,34 @@ export default {
         justify-content: space-between;
         margin-bottom: 0.25rem;
 
-        @media screen and (max-width: 315px) {
+        @media screen and (max-width: 360px) {
             & {
                 flex-direction: column;
             }
         }
 
         & label {
-            border: 1px solid rgba(105, 105, 105, 0.4);
+            border: 1px solid rgba(105, 105, 105, 0.3);
             border-radius: 0.25rem;
             width: fit-content;
             padding: 0.125rem 0.5rem;
             margin-bottom: 0.625rem;
             cursor: pointer;
+
+            &:hover {
+                color: #bbb;
+            }
         }
     }
 
     input {
         // font-size: 15px;
         margin-bottom: 0.5rem;
+    }
+
+    #record_state_message {
+        font-style: italic;
+        text-transform: initial;
     }
 
     p {
@@ -378,7 +452,7 @@ export default {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         padding: 1rem 0 0;
         width: 100%;
-        border: 1px solid rgba(105, 105, 105, 0.4);
+        border: 1px solid rgba(105, 105, 105, 0.3);
         border-radius: 0.25rem;
 
         &.drag_and_drop {

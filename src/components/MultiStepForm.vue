@@ -721,7 +721,7 @@ export default {
     },
 
     mounted() {
-        this.currentTab = 1;
+        this.currentTab = 0;
         this.showTab(this.currentTab);
         this.removeErrorMessage();
     },
@@ -858,7 +858,7 @@ textarea {
     & label {
         margin-bottom: 0;
         margin-right: 1.5rem;
-        font-size: 15px;
+        font-size: 14px;
         // color: #bbb;
     }
 

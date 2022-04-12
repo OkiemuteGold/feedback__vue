@@ -240,7 +240,7 @@ main {
     cursor: pointer;
 
     &:hover {
-        transform: scale(0.95);
+        transform: scale(0.98);
     }
 
     & span {
