@@ -113,6 +113,9 @@ export default {
             consumerName: "",
             recordedAudio: null,
             audioSize: "",
+
+            subName: "feedback",
+            recordName: "",
         };
     },
 
@@ -123,6 +126,19 @@ export default {
     },
 
     methods: {
+        generateUniqueId() {
+            let d = new Date();
+            let year = d.getFullYear(),
+                month = d.getMonth() + 1,
+                day = d.getDate(),
+                hours = d.getHours(),
+                minutes = d.getMinutes(),
+                seconds = d.getSeconds();
+
+            let dateOutput = `${day}-${month}-${year} | ${hours}:${minutes}:${seconds}`;
+            return (this.recordName = `${this.subName}__${dateOutput}`);
+        },
+
         uploadReferencePossible() {
             if (this.consumerName == "") {
                 this.recordStateMessage =
@@ -257,6 +273,9 @@ export default {
             let consumerName = this.consumerName;
             let audioPath = "RecordedFeedbacks/" + consumerName;
 
+            this.generateUniqueId();
+            let recordName = this.recordName;
+
             var storageRef = fbase.storage().ref(audioPath);
 
             const metadata = {
@@ -267,7 +286,9 @@ export default {
                 contentType: "audio/mp3",
             };
 
-            let uploadTask = storageRef.child("feedback").put(audio, metadata);
+            let uploadTask = storageRef
+                .child(`${recordName}`)
+                .put(audio, metadata);
 
             uploadTask.on(
                 "state_changed",
@@ -296,18 +317,19 @@ export default {
                             // console.log("File available at", downloadUrl);
 
                             if (downloadUrl) {
-                                this.addAudioFeedback(downloadUrl);
+                                this.addAudioFeedback(downloadUrl, recordName);
                             }
                         });
                 }
             );
         },
 
-        addAudioFeedback(downloadUrl) {
+        addAudioFeedback(downloadUrl, recordName) {
             let consumerName = this.consumerName;
 
             let recordedData = {
                 ConsumerName: consumerName,
+                RecordName: recordName,
                 Size: this.audioSize,
                 DownloadUrl: downloadUrl,
                 feedbackCreatedAt: this.convertEpochDate(new Date()),
@@ -322,7 +344,7 @@ export default {
                     // console.log("Audio written with ID: ", audioRef.id);
 
                     if (audioRef.id) {
-                        this.updateFileMetaWithId(audioRef.id);
+                        this.updateFileMetaWithId(audioRef.id, recordName);
                     }
                 })
                 .catch((err) => {
@@ -331,11 +353,14 @@ export default {
                 });
         },
 
-        updateFileMetaWithId(audioRefId) {
+        updateFileMetaWithId(audioRefId, recordName) {
             let consumerName = this.consumerName;
             let audioPath = "RecordedFeedbacks/" + consumerName;
 
-            var forestRef = fbase.storage().ref(audioPath).child("feedback");
+            var forestRef = fbase
+                .storage()
+                .ref(audioPath)
+                .child(`${recordName}`);
 
             var newMetadata = {
                 customMetadata: {
@@ -348,6 +373,7 @@ export default {
                 .then((metadata) => {
                     // console.log(metadata);
                     this.consumerName = "";
+                    this.recordStateMessage = "Upload Successful!";
 
                     return metadata;
                 })
