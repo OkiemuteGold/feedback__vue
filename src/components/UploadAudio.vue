@@ -114,7 +114,7 @@ export default {
     methods: {
         uploadReferencePossible() {
             if (this.consumerName == "") {
-                this.successMessage = "Please enter a consumer name to upload.";
+                this.successMessage = "Please enter a consumer name.";
             } else {
                 this.successMessage = "";
             }

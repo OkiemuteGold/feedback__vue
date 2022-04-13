@@ -177,7 +177,7 @@ export default {
                 svgPath == "btnStopIcon"
             ) {
                 this.stoppedRecording = true;
-                this.recordStateMessage = "Finished recording! Please upload.";
+                this.recordStateMessage = "Finished recording!";
             } else if (
                 id == "btnPlay" ||
                 id == "btnPlayIcon" ||
@@ -374,6 +374,7 @@ export default {
                     // console.log(metadata);
                     this.consumerName = "";
                     this.recordStateMessage = "Upload Successful!";
+                    this.stoppedRecording = false;
 
                     return metadata;
                 })
