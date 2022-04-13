@@ -85,6 +85,8 @@
 
                                 {{ loginHelp }}
                             </div> -->
+
+                            {{ loginHelp }}
                         </div>
 
                         <!-- <div class="mb-3 form-check">
@@ -101,9 +103,15 @@
                         <button
                             type="submit"
                             class="btn"
-                            @click.prevent="login"
+                            @click.prevent="login()"
+                            :disabled="!isValidLoginInfo"
                         >
                             Login
+                            <span
+                                class="spinner-border text-light"
+                                role="status"
+                                v-if="isLoading"
+                            ></span>
                         </button>
                     </form>
                 </div>
@@ -140,9 +148,9 @@
                                 placeholder="Enter your email"
                                 v-model="form.email"
                             />
-                            <div id="emailHelp" class="form-text">
+                            <!-- <div id="emailHelp" class="form-text">
                                 We'll never share your email with anyone else.
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="form-group mb-3">
@@ -179,9 +187,15 @@
                         <button
                             type="submit"
                             class="btn"
-                            @click.prevent="registerUser"
+                            @click.prevent="registerUser()"
+                            :disabled="!isValidSignupInfo"
                         >
                             Signup
+                            <span
+                                class="spinner-border text-light"
+                                role="status"
+                                v-if="isLoading"
+                            ></span>
                         </button>
                     </form>
                 </div>
@@ -191,7 +205,7 @@
 </template>
 
 <script>
-// import $ from "jquery";
+import $ from "jquery";
 import "@/mixins";
 import { fbase } from "../firebase";
 
@@ -201,7 +215,7 @@ export default {
     data() {
         return {
             instructionText: "Please LOGIN or SIGNUP to continue",
-            // loginHelp: "",
+            loginHelp: "",
             passwordHelp: "",
 
             form: {
@@ -209,7 +223,22 @@ export default {
                 email: null,
                 password: null,
             },
+
+            isLoading: false,
         };
+    },
+
+    computed: {
+        isValidLoginInfo() {
+            return this.form.email !== null && this.form.password !== null;
+        },
+        isValidSignupInfo() {
+            return (
+                this.form.fullname !== null &&
+                this.form.email !== null &&
+                this.form.password !== null
+            );
+        },
     },
 
     methods: {
@@ -222,20 +251,31 @@ export default {
         },
 
         login() {
+            this.isLoading = true;
+            $(".spinner-border").show();
+
             fbase
                 .auth()
                 .signInWithEmailAndPassword(this.form.email, this.form.password)
                 .then(() => {
                     // $("#loginModal").modal("hide");
-                    this.$router.replace("/feedback");
+
+                    setTimeout(() => {
+                        this.$router.replace("/feedback");
+                        this.isLoading = false;
+                    }, 700);
                 })
                 .catch(function (error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
 
+                    $(".spinner-border").hide();
+
+                    // auth/user-not-found
                     if (errorCode == "auth/wrong-password") {
-                        alert(errorMessage);
-                        // this.loginHelp = "Wrong password!";
+                        setTimeout(() => {
+                            alert(errorMessage);
+                        }, 700);
                     } else {
                         alert(errorMessage);
                     }
@@ -244,6 +284,9 @@ export default {
         },
 
         registerUser() {
+            this.isLoading = true;
+            $(".spinner-border").show();
+
             fbase
                 .auth()
                 .createUserWithEmailAndPassword(
@@ -255,16 +298,23 @@ export default {
 
                     // clear field only when its successful
                     this.resetFormData();
-                    this.$router.replace("/feedback");
+                    setTimeout(() => {
+                        this.$router.replace("/feedback");
+                        this.isLoading = false;
+                    }, 700);
                 })
                 .catch((error) => {
                     var errorCode = error.code;
                     var errorMessage = error.message;
 
+                    $(".spinner-border").hide();
+
                     if (errorCode == "auth/weak-password") {
-                        this.passwordHelp =
-                            "The password is too weak! " + errorMessage + "!";
-                        // alert("The password is too weak.");
+                        setTimeout(() => {
+                            this.passwordHelp = `
+                                The password is too weak! ${errorMessage}.
+                            `;
+                        }, 700);
                     } else {
                         alert(errorMessage);
                     }
@@ -367,7 +417,8 @@ form {
     }
 
     .form-text {
-        color: var(--customParaText);
+        // color: var(--customParaText);
+        color: #bbb;
         font-style: italic;
         font-size: 12px;
         margin-top: 10px;
@@ -385,6 +436,9 @@ form button {
     color: var(--customBlueLight);
     border-color: var(--customBlue);
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover,
     &:active,
@@ -396,6 +450,14 @@ form button {
 
     &.disabled {
         opacity: 0.5;
+    }
+
+    span.spinner-border {
+        font-size: 0.75rem;
+        width: 0.875rem;
+        height: 0.875rem;
+        margin-left: 0.5rem;
+        vertical-align: text-bottom;
     }
 }
 

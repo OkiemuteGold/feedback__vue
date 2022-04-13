@@ -2,7 +2,7 @@
     <div class="record">
         <!-- <p>Record and Play audio</p> -->
 
-        <div v-if="notAvailable">
+        <div v-if="!notAvailable">
             <div class="tab_item">
                 <label for="name">Consumer name</label>
                 <input
@@ -161,8 +161,7 @@ export default {
                 svgPath == "btnStopIcon"
             ) {
                 this.stoppedRecording = true;
-                this.recordStateMessage =
-                    "Finished recording! Please enter a consumer name to upload.";
+                this.recordStateMessage = "Finished recording! Please upload.";
             } else if (
                 id == "btnPlay" ||
                 id == "btnPlayIcon" ||
@@ -186,10 +185,11 @@ export default {
                 navigator.mediaDevices
                     .getUserMedia({
                         audio: true,
+                        video: false,
                     })
 
                     // Success callback
-                    .then(function (stream) {
+                    .then((stream) => {
                         if ("srcObject" in audioRecorder) {
                             audioRecorder.srcObject = stream;
                         } else {
@@ -200,7 +200,7 @@ export default {
 
                         const mediaRecorder = new MediaRecorder(stream);
 
-                        btnRecord.onclick = function () {
+                        btnRecord.onclick = () => {
                             mediaRecorder.start();
                             // audioRecorder.play();
 
@@ -210,26 +210,26 @@ export default {
 
                         let chunks = [];
 
-                        mediaRecorder.ondataavailable = function (e) {
+                        mediaRecorder.ondataavailable = (e) => {
                             chunks.push(e.data);
 
                             this.recordedAudio = chunks[0];
                             this.audioSize = this.recordedAudio.size;
-                            console.log(this.recordedAudio, this.audioSize);
+                            // console.log(this.recordedAudio, this.audioSize);
 
-                            btnPlay.onclick = function () {
+                            btnPlay.onclick = () => {
                                 audioPlayer.play();
                             };
                         };
 
-                        btnStop.onclick = function () {
+                        btnStop.onclick = () => {
                             mediaRecorder.stop();
 
                             console.log(mediaRecorder.state);
                             console.log("recorder stopped");
                         };
 
-                        mediaRecorder.onstop = function () {
+                        mediaRecorder.onstop = () => {
                             console.log("recorder stopped");
 
                             // type: ["audio/ogg; codecs=opus"],
@@ -244,7 +244,7 @@ export default {
                     })
 
                     // Error callback
-                    .catch(function (err) {
+                    .catch((err) => {
                         console.log(`Error Type - ${err.name}: ${err.message}`);
                     });
             } else {
@@ -254,8 +254,6 @@ export default {
 
         sendToFirebaseStorage() {
             let audio = this.recordedAudio;
-            console.log(audio, this.audioSize);
-
             let consumerName = this.consumerName;
             let audioPath = "RecordedFeedbacks/" + consumerName;
 
@@ -295,7 +293,7 @@ export default {
                         .getDownloadURL()
                         .then((downloadUrl) => {
                             // this.audioUrl = downloadUrl;
-                            console.log("File available at", downloadUrl);
+                            // console.log("File available at", downloadUrl);
 
                             if (downloadUrl) {
                                 this.addAudioFeedback(downloadUrl);
@@ -306,7 +304,6 @@ export default {
         },
 
         addAudioFeedback(downloadUrl) {
-            console.log(this.audioSize);
             let consumerName = this.consumerName;
 
             let recordedData = {
@@ -322,7 +319,7 @@ export default {
                 .add(recordedData)
                 .then((audioRef) => {
                     audioRef;
-                    console.log("Audio written with ID: ", audioRef.id);
+                    // console.log("Audio written with ID: ", audioRef.id);
 
                     if (audioRef.id) {
                         this.updateFileMetaWithId(audioRef.id);
@@ -349,7 +346,7 @@ export default {
             forestRef
                 .updateMetadata(newMetadata)
                 .then((metadata) => {
-                    console.log(metadata);
+                    // console.log(metadata);
                     this.consumerName = "";
 
                     return metadata;
