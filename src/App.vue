@@ -1,6 +1,8 @@
 <template>
     <div id="app">
-        <router-view />
+        <transition name="page" mode="out-in">
+            <router-view />
+        </transition>
     </div>
 </template>
 
@@ -36,9 +38,37 @@ body {
     color: var(--customText);
     overflow-x: hidden;
 
-    hr {
-        margin-top: 1.5rem;
-        margin-bottom: 1.5rem;
+    .page-enter,
+    .page-leave-to {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    .page-enter-active,
+    .page-leave-active {
+        transition: all 0.3s ease;
+    }
+
+    .page-enter-to,
+    .page-leave {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    ::-webkit-scrollbar,
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-thumb,
+    .record_action_buttons .btn span,
+    .logoutBtn,
+    #regForm,
+    #audioForm .labels label,
+    input,
+    textarea,
+    button {
+        -o-transition: 0.4s ease;
+        -moz-transition: 0.4s ease;
+        -webkit-transition: 0.4s ease;
+        transition: 0.4s ease;
     }
 
     /* scrollbar */
@@ -60,6 +90,92 @@ body {
 
     ::-webkit-scrollbar-thumb:hover {
         background: #9a9a9a;
+    }
+
+    .user-login {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: var(--appBackgroundLight);
+        overflow: hidden;
+
+        main {
+            max-width: 700px;
+            padding: 50px 60px;
+            margin: 2rem 1rem;
+            background: var(--appBackgroundDark);
+            color: #fff;
+            border-radius: 0.25rem;
+            position: relative;
+            overflow-y: auto;
+
+            @media screen and (max-width: 426px) {
+                & {
+                    margin: 0;
+                    padding: 70px 25px 50px;
+                    height: 100%;
+                    width: 100%;
+
+                    .logo_container {
+                        margin-top: -70px;
+                        margin-left: -18px;
+                    }
+                }
+            }
+        }
+
+        .welcome-text {
+            padding-bottom: 20px;
+            text-align: center;
+
+            h1 {
+                font-size: 35px;
+                text-shadow: 0.5px 0.5px 1px var(--customParaText);
+                letter-spacing: 0.5px;
+
+                @media screen and (max-width: 426px) {
+                    & {
+                        font-size: 28px;
+                    }
+                }
+            }
+
+            p {
+                color: #fff;
+                font-size: 15px;
+            }
+        }
+
+        .tab-content {
+            text-transform: capitalize;
+            margin-top: 1.75rem;
+        }
+
+        form {
+            label {
+                font-size: 15px;
+            }
+
+            input,
+            input::placeholder {
+                font-size: 13px;
+            }
+
+            .form-text {
+                color: #bbb;
+                font-style: italic;
+                font-size: 12px;
+                margin-top: 10px;
+            }
+        }
+
+        .form-check-input:checked {
+            background-color: var(--customBlue);
+            border-color: var(--customBlue);
+        }
     }
 
     // input[type="radio"] {
@@ -124,42 +240,31 @@ body {
             width: 0.75rem;
         }
     }
-}
 
-::-webkit-scrollbar,
-::-webkit-scrollbar-track,
-::-webkit-scrollbar-thumb,
-.record_action_buttons .btn span,
-.logoutBtn,
-#regForm,
-#audioForm .labels label,
-input,
-textarea,
-button {
-    -o-transition: 0.4s ease;
-    -moz-transition: 0.4s ease;
-    -webkit-transition: 0.4s ease;
-    transition: 0.4s ease;
-}
+    // input:focus,
+    button:focus,
+    .btn:active,
+    .btn:focus {
+        box-shadow: none !important;
+    }
 
-// input:focus,
-button:focus,
-.btn:active,
-.btn:focus {
-    box-shadow: none !important;
-}
+    // p {
+    //     color: var(--customParaText);
+    // }
 
-p {
-    color: var(--customParaText);
-}
+    img,
+    svg {
+        max-width: 100%;
+        height: auto;
+    }
 
-img,
-svg {
-    max-width: 100%;
-    height: auto;
-}
+    svg {
+        vertical-align: middle;
+    }
 
-svg {
-    vertical-align: middle;
+    hr {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 }
 </style>

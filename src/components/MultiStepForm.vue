@@ -28,7 +28,7 @@
                 </div>
 
                 <h3 class="tab_title mt-5">Consumer Info</h3>
-                <p>All fields are required**</p>
+                <p class="instruction">All fields are required**</p>
 
                 <div
                     class="tab_item"
@@ -313,12 +313,12 @@ import { db } from "../firebase";
 import genders from "@/api/genders";
 import ages from "@/api/ages";
 import consumerInfos from "@/api/consumerInfos";
-import ratings from "@/api/ratings";
 // import packagingOptions from "@/api/packagingOptions";
 // import tasteOptions from "@/api/tasteOptions";
+// import tasteLikeOptions from "@/api/tasteLikeOptions";
+// import tasteDislikeOptions from "@/api/tasteDislikeOptions";
 import samplingOptions from "@/api/samplingOptions";
-import tasteLikeOptions from "@/api/tasteLikeOptions";
-import tasteDislikeOptions from "@/api/tasteDislikeOptions";
+import ratings from "@/api/ratings";
 import textAreaResponse from "@/api/textAreaResponse";
 
 export default {
@@ -327,12 +327,12 @@ export default {
             genders,
             ages,
             consumerInfos,
-            ratings,
             // packagingOptions,
             // tasteOptions,
+            // tasteLikeOptions,
+            // tasteDislikeOptions,
             samplingOptions,
-            tasteLikeOptions,
-            tasteDislikeOptions,
+            ratings,
             textAreaResponse,
 
             allFeedbacks: [],
@@ -354,17 +354,21 @@ export default {
             gender: "",
             age: "",
 
+            // tasteOption: "",
+            // packagingOption: "",
+            // tasteLikeOption: "",
+            // tasteDislikeOption: "",
+
             samplingOption: "",
-            tasteOption: "",
-            packagingOption: "",
-            tasteLikeOption: "",
-            tasteDislikeOption: "",
-            appearanceRatings: "",
             tasteRatings: "",
+            experienceRatings: "",
+            packageRatings: "",
             overallRatings: "",
+            wouldBuy: "",
+            wouldRecommend: "",
 
             question1Response: "",
-            question2Response: "",
+            // question2Response: "",
         };
     },
     computed: {
@@ -388,20 +392,24 @@ export default {
 
         isValidTab2() {
             return (
+                // this.tasteOption !== "" &&
+                // this.packagingOption !== "" &&
+                // this.tasteLikeOption !== "" &&
+                // this.tasteDislikeOption !== "" &&
                 this.samplingOption !== "" &&
-                this.tasteOption !== "" &&
-                this.packagingOption !== "" &&
-                this.tasteLikeOption !== "" &&
-                this.tasteDislikeOption !== "" &&
                 this.tasteRatings !== "" &&
-                this.appearanceRatings !== "" &&
-                this.overallRatings !== ""
+                this.experienceRatings !== "" &&
+                this.packageRatings !== "" &&
+                this.overallRatings !== "" &&
+                this.wouldBuy !== "" &&
+                this.wouldRecommend !== ""
             );
         },
 
         isValidTab3() {
             return (
-                this.question1Response !== "" && this.question2Response !== ""
+                this.question1Response !== ""
+                //  && this.question2Response !== ""
             );
         },
 
@@ -452,12 +460,18 @@ export default {
         getRatings(event) {
             let name = event.target.name;
 
-            if (name === "appearanceRatings") {
-                this.appearanceRatings = event.target.value;
-            } else if (name === "tasteRatings") {
+            if (name === "tasteRatings") {
                 this.tasteRatings = event.target.value;
+            } else if (name === "experienceRatings") {
+                this.experienceRatings = event.target.value;
+            } else if (name === "packageRatings") {
+                this.packageRatings = event.target.value;
             } else if (name === "overallRatings") {
                 this.overallRatings = event.target.value;
+            } else if (name === "wouldBuy") {
+                this.wouldBuy = event.target.value;
+            } else if (name === "wouldRecommend") {
+                this.wouldRecommend = event.target.value;
             }
         },
 
@@ -466,9 +480,10 @@ export default {
 
             if (name === "question1") {
                 this.question1Response = event.target.value;
-            } else if (name === "question2") {
-                this.question2Response = event.target.value;
             }
+            // else if (name === "question2") {
+            //     this.question2Response = event.target.value;
+            // }
         },
 
         submitNewFeedback() {
@@ -484,30 +499,32 @@ export default {
 
         addFormFeedback() {
             let feedbackData = {
-                Marketer: this.promoterName,
+                Promoter: this.promoterName,
                 Consumer: this.consumerName,
-                consumerEmail: this.consumerEmail,
-                consumerPhone: this.consumerPhone,
-                consumerAddress: this.consumerAddress,
-                Date: this.date,
-
+                ConsumerEmail: this.consumerEmail,
+                ConsumerPhone: this.consumerPhone,
+                ConsumerAddress: this.consumerAddress,
                 Gender: this.gender,
                 Age: this.age,
+                Date: this.date,
+
+                // TasteOption: this.tasteOption,
+                // PackagingOption: this.packagingOption,
+                // TasteLikeOption: this.tasteLikeOption,
+                // TasteDislikeOption: this.tasteDislikeOption,
 
                 SamplingOption: this.samplingOption,
-                TasteOption: this.tasteOption,
-                PackagingOption: this.packagingOption,
-                TasteLikeOption: this.tasteLikeOption,
-                TasteDislikeOption: this.tasteDislikeOption,
-
-                tasteRatings: this.tasteRatings,
-                appearanceRatings: this.appearanceRatings,
-                overallRatings: this.overallRatings,
+                TasteRatings: this.tasteRatings,
+                ExperienceRatings: this.experienceRatings,
+                PackageRatings: this.packageRatings,
+                OverallRatings: this.overallRatings,
+                WouldBuy: this.wouldBuy,
+                WouldRecommend: this.wouldRecommend,
 
                 Question1Response: this.question1Response,
-                Question2Response: this.question2Response,
+                // Question2Response: this.question2Response,
 
-                createdAt: new Date(),
+                CreatedAt: new Date(),
             };
 
             console.log(feedbackData);
@@ -545,31 +562,6 @@ export default {
 
         // if last form... submit
         submitForm() {
-            // console.log(
-            //     this.promoterName,
-            //     this.consumerName,
-            //     this.consumerEmail,
-            //     this.consumerPhone,
-            //     this.consumerAddress,
-            //     this.date,
-
-            //     this.gender,
-            //     this.age,
-
-            //     this.samplingOption,
-            //     this.tasteOption,
-            //     this.packagingOption,
-            //     this.tasteLikeOption,
-            //     this.tasteDislikeOption,
-
-            //     this.tasteRatings,
-            //     this.appearanceRatings,
-            //     this.overallRatings,
-
-            //     this.question1Response,
-            //     this.question2Response
-            // );
-
             if (this.isValid) {
                 this.addFormFeedback();
 
@@ -668,56 +660,6 @@ export default {
 
             this.showTab(this.currentTab);
         },
-
-        // fixStepIndicator(n) {
-        //     let tabs = document.getElementsByClassName("tab");
-        //     let indicators = document.getElementById("indicators");
-
-        //     let i = 0;
-        //     while (i < tabs.length) {
-        //         let span = document.createElement("span");
-        //         console.log(span);
-
-        //         span.classList = "step";
-        //         indicators.appendChild(span);
-
-        //         i += 1;
-        //     }
-
-        //     // remove active class of all steps and add to the current step
-        //     let j,
-        //         x = document.getElementsByClassName("step");
-        //     for (j = 0; j < x.length; j++) {
-        //         x[j].className = x[j].className.replace(" active", "");
-        //     }
-
-        //     x[n].className += " active";
-        // },
-
-        // load() {
-        //     // let tabs = document.getElementsByClassName("tab");
-        //     // console.log(tabs);
-        //     // const indicators = document.getElementById("indicators");
-
-        //     // let i = 0;
-
-        //     // while (i < tabs.length) {
-        //     //     let span = document.createElement("span");
-        //     //     console.log(span);
-        //     //     span.classList = "step";
-        //     //     indicators.appendChild(span);
-
-        //     //     i += 1;
-        //     // }
-
-        //     this.currentTab = 0;
-
-        //     // display the specified tab of the form...
-        //     this.showTab(this.currentTab);
-
-        //     // determine which tab to display
-        //     this.nextPrev(this.currentTab);
-        // },
     },
 
     mounted() {
@@ -761,8 +703,8 @@ export default {
 }
 
 #regForm {
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     position: relative;
 }
 
@@ -775,6 +717,10 @@ export default {
         font-size: 15px;
         font-style: italic;
         text-transform: initial;
+    }
+
+    .instruction {
+        color: var(--customParaText);
     }
 }
 
@@ -910,32 +856,6 @@ button {
         background-color: var(--customText);
     }
 }
-
-/* steps */
-// .indicators {
-//     text-align: center;
-//     margin-top: 40px;
-
-//     & .step {
-//         height: 15px;
-//         width: 15px;
-//         margin: 0 3px;
-//         background-color: #bbb;
-//         border: none;
-//         border-radius: 50%;
-//         display: inline-block;
-//         opacity: 0.5;
-
-//         &.active {
-//             opacity: 1;
-//         }
-
-//         /* steps that's finished and valid: */
-//         &.finish {
-//             background-color: #04aa6d;
-//         }
-//     }
-// }
 
 /* new feedback --------- */
 .new_feedback_container {

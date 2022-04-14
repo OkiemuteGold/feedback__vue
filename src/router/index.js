@@ -16,7 +16,21 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: Home,
+        meta: {
+            title: "Home page",
+            metaTags: [
+                {
+                    name: "description",
+                    content:
+                        "Home page of feedback form",
+                },
+                {
+                    property: "og:description",
+                    content: "Home page of feedback form",
+                },
+            ],
+        },
     },
     // {
     //     path: '/admin',
@@ -61,6 +75,18 @@ const routes = [
         component: Feedback,
         meta: {
             requiresAuth: true,
+            title: "Feedback form page",
+            metaTags: [
+                {
+                    name: "description",
+                    content:
+                        "Feedback form page to collect all consumers feedbacks",
+                },
+                {
+                    property: "og:description",
+                    content: "Feedback form page to collect all consumers feedbacks",
+                },
+            ],
         },
     }
 ]

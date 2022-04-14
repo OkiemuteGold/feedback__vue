@@ -1,6 +1,13 @@
 <template>
     <div class="user-login">
         <main>
+            <div class="logo_container">
+                <img
+                    src="@/assets/soulcomms-logo.png"
+                    alt="logo of soulcomms"
+                />
+            </div>
+
             <div class="welcome-text">
                 <h1><span>VitaMilk</span> Feedback Form</h1>
                 <hr />
@@ -102,7 +109,7 @@
 
                         <button
                             type="submit"
-                            class="btn"
+                            class="btn login"
                             @click.prevent="login()"
                             :disabled="!isValidLoginInfo"
                         >
@@ -186,7 +193,7 @@
 
                         <button
                             type="submit"
-                            class="btn"
+                            class="btn signup"
                             @click.prevent="registerUser()"
                             :disabled="!isValidSignupInfo"
                         >
@@ -214,7 +221,7 @@ export default {
 
     data() {
         return {
-            instructionText: "Please LOGIN or SIGNUP to continue",
+            instructionText: "Please Login or Signup to continue",
             loginHelp: "",
             passwordHelp: "",
 
@@ -252,7 +259,7 @@ export default {
 
         login() {
             this.isLoading = true;
-            $(".spinner-border").show();
+            $(".login .spinner-border").show();
 
             fbase
                 .auth()
@@ -269,7 +276,7 @@ export default {
                     var errorCode = error.code;
                     var errorMessage = error.message;
 
-                    $(".spinner-border").hide();
+                    $(".login .spinner-border").hide();
 
                     // auth/user-not-found
                     if (errorCode == "auth/wrong-password") {
@@ -285,7 +292,7 @@ export default {
 
         registerUser() {
             this.isLoading = true;
-            $(".spinner-border").show();
+            $(".signup .spinner-border").show();
 
             fbase
                 .auth()
@@ -307,7 +314,7 @@ export default {
                     var errorCode = error.code;
                     var errorMessage = error.message;
 
-                    $(".spinner-border").hide();
+                    $(".signup .spinner-border").hide();
 
                     if (errorCode == "auth/weak-password") {
                         setTimeout(() => {
@@ -332,64 +339,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.user-login {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #152733;
-    overflow: hidden;
+main .logo_container {
+    max-width: 73px;
+    margin: -40px auto 35px;
 }
-
-main {
-    max-width: 700px;
-    padding: 50px 60px;
-    background: #0f202c;
-    color: #fff;
-    border-radius: 3px;
-    position: relative;
-    overflow-y: auto;
-}
-
-.header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 3px;
-
-    a {
-        border-radius: 3px;
-        background: #fff;
-        color: var(--customBlue);
-    }
-}
-
-.welcome-text {
-    padding-bottom: 20px;
-    text-align: center;
-
-    h1 {
-        font-size: 35px;
-        text-shadow: 0.5px 0.5px 1px var(--customParaText);
-        letter-spacing: 0.5px;
-    }
-
-    p {
-        color: #fff;
-        font-size: 16px;
-    }
-}
-
-// hr {
-//     margin-top: 1.5rem;
-//     margin-bottom: 1.5rem;
-// }
 
 .nav-pills .nav-link {
     text-transform: uppercase;
     color: var(--customBlue);
+    font-size: 15px;
 
     &:not(.nav-link.active):hover {
         color: var(--customBlueLight);
@@ -401,37 +359,8 @@ main {
     background: var(--customBlue);
 }
 
-.tab-content {
-    text-transform: capitalize;
-    margin-top: 1.75rem;
-}
-
-form {
-    label {
-        font-size: 15px;
-    }
-
-    input,
-    input::placeholder {
-        font-size: 13px;
-    }
-
-    .form-text {
-        // color: var(--customParaText);
-        color: #bbb;
-        font-style: italic;
-        font-size: 12px;
-        margin-top: 10px;
-    }
-}
-
-.form-check-input:checked {
-    background-color: var(--customBlue);
-    border-color: var(--customBlue);
-}
-
 form button {
-    margin-top: 10px;
+    margin-top: 1.25rem;
     background: transparent;
     color: var(--customBlueLight);
     border-color: var(--customBlue);
@@ -453,44 +382,12 @@ form button {
     }
 
     span.spinner-border {
+        display: none;
         font-size: 0.75rem;
         width: 0.875rem;
         height: 0.875rem;
         margin-left: 0.5rem;
         vertical-align: text-bottom;
-    }
-}
-
-@media screen and (max-width: 426px) {
-    main {
-        padding: 50px 20px;
-        height: 100%;
-    }
-
-    .header {
-        a {
-            padding: 0.25rem 0.5rem;
-        }
-    }
-
-    .welcome-text {
-        padding-bottom: 15px;
-
-        h1 {
-            font-size: 24px;
-        }
-        // p {
-        //     font-size: 13px;
-        // }
-    }
-
-    .tab-content {
-        text-transform: capitalize;
-        margin-top: 1.5rem;
-    }
-
-    label {
-        font-size: 13px !important;
     }
 }
 </style>

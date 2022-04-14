@@ -154,7 +154,7 @@ export default {
             audioPlayer.addEventListener("ended", () => {
                 // this.stoppedRecording = true;
                 this.recordStateMessage =
-                    "Please enter a consumer name to upload.";
+                    "Finished recording! Please ensure to upload recording.";
             });
 
             let svgPath = event.target.parentElement.id;
@@ -332,7 +332,7 @@ export default {
                 RecordName: recordName,
                 Size: this.audioSize,
                 DownloadUrl: downloadUrl,
-                feedbackCreatedAt: this.convertEpochDate(new Date()),
+                FeedbackCreatedAt: this.convertEpochDate(new Date()),
             };
 
             console.log(recordedData);
@@ -364,7 +364,7 @@ export default {
 
             var newMetadata = {
                 customMetadata: {
-                    recordedDocumentReferenceID: audioRefId,
+                    RecordedDocumentReferenceID: audioRefId,
                 },
             };
 
@@ -374,7 +374,7 @@ export default {
                     // console.log(metadata);
                     this.consumerName = "";
                     this.recordStateMessage = "Upload Successful!";
-                    this.stoppedRecording = false;
+                    this.stoppedRecording = true;
 
                     return metadata;
                 })
@@ -390,7 +390,7 @@ export default {
 
         setTimeout(() => {
             this.recordStateMessage = "";
-        }, 5000);
+        }, 6000);
     },
 };
 </script>

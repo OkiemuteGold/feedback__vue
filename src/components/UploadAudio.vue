@@ -101,6 +101,8 @@ export default {
             audioUrl: "",
             consumerName: "",
 
+            uploadedAudioName: "",
+
             successMessage: "",
             dragAndDropMessage: "Drop audio files here",
         };
@@ -112,6 +114,19 @@ export default {
     },
 
     methods: {
+        generateUniqueId(fileName) {
+            let d = new Date();
+            let year = d.getFullYear(),
+                month = d.getMonth() + 1,
+                day = d.getDate(),
+                hours = d.getHours(),
+                minutes = d.getMinutes(),
+                seconds = d.getSeconds();
+
+            let dateOutput = `${day}-${month}-${year} | ${hours}:${minutes}:${seconds}`;
+            return (this.uploadedAudioName = `${fileName}__${dateOutput}`);
+        },
+
         uploadReferencePossible() {
             if (this.consumerName == "") {
                 this.successMessage = "Please enter a consumer name.";
@@ -133,16 +148,18 @@ export default {
 
             setTimeout(() => {
                 this.successMessage = "";
-            }, 4000);
+            }, 5000);
         },
 
         hideDragDropField() {
             this.showField = false;
+            this.uploadReferencePossible();
         },
 
         showDragDropField() {
             this.showField = true;
             this.showFileInfo = false;
+            this.uploadReferencePossible();
         },
 
         preventDefStopProp(event) {
@@ -238,6 +255,9 @@ export default {
             let consumerName = this.consumerName;
             let audioPath = "AudioFeedbacks/" + consumerName;
 
+            this.generateUniqueId(audio.name);
+            let uploadedAudioName = this.uploadedAudioName;
+
             var storageRef = fbase.storage().ref(audioPath);
 
             const metadata = {
@@ -247,7 +267,9 @@ export default {
                 },
             };
 
-            let uploadTask = storageRef.child(audio.name).put(audio, metadata);
+            let uploadTask = storageRef
+                .child(`${uploadedAudioName}`)
+                .put(audio, metadata);
 
             uploadTask.on(
                 "state_changed",
@@ -303,21 +325,22 @@ export default {
             audios.forEach((audio) => {
                 this.sendToFirebaseStorage(audio);
             });
-
-            this.uploadReferencePossible();
         },
 
-        updateFileMetaWithId(audioRefId, audioFileData) {
+        updateFileMetaWithId(audioRefId) {
             let consumerName = this.consumerName;
-            let audioName = audioFileData.Name;
+            let uploadedAudioName = this.uploadedAudioName;
             let audioPath = "AudioFeedbacks/" + consumerName;
 
-            var forestRef = fbase.storage().ref(audioPath).child(audioName);
+            var forestRef = fbase
+                .storage()
+                .ref(audioPath)
+                .child(`${uploadedAudioName}`);
 
             // Create file metadata to update
             var newMetadata = {
                 customMetadata: {
-                    documentReferenceID: audioRefId,
+                    DocumentReferenceID: audioRefId,
                 },
             };
 
@@ -327,6 +350,10 @@ export default {
                 .then((metadata) => {
                     console.log(metadata);
                     this.consumerName = "";
+                    this.resetFeedbackData();
+
+                    this.showFileInfo = false;
+                    this.showSuccessMessage();
 
                     return metadata;
                 })
@@ -342,11 +369,11 @@ export default {
             audioFiles.forEach((audio) => {
                 let audioFileData = {
                     ConsumerName: consumerName,
-                    Name: audio.audioName,
+                    UploadedAudioName: this.uploadedAudioName,
                     Size: audio.audioSize,
                     DownloadUrl: this.audioUrl,
                     LastModifiedDate: audio.lastModifiedDate,
-                    feedbackCreatedAt: this.convertEpochDate(new Date()),
+                    FeedbackCreatedAt: this.convertEpochDate(new Date()),
                 };
 
                 console.log(audioFileData);
@@ -357,7 +384,7 @@ export default {
                         audioRef;
                         console.log("Audio written with ID: ", audioRef.id);
 
-                        this.updateFileMetaWithId(audioRef.id, audioFileData);
+                        this.updateFileMetaWithId(audioRef.id);
                     })
                     .catch((err) => {
                         this.successMessage = err;
@@ -368,11 +395,6 @@ export default {
 
         submitFeedbackReference() {
             this.addAudioFeedback();
-            // this.resetFeedbackData();
-
-            this.showFileInfo = false;
-
-            this.showSuccessMessage();
         },
     },
 

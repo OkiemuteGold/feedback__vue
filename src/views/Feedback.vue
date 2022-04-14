@@ -1,6 +1,13 @@
 <template>
     <div class="user-login">
         <main>
+            <div class="logo_container">
+                <img
+                    src="@/assets/soulcomms-logo.png"
+                    alt="logo of soulcomms"
+                />
+            </div>
+
             <div class="logoutBtn" @click="logout()">
                 <span>Logout</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -181,49 +188,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.user-login {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: var(--appBackgroundLight);
-    overflow: hidden;
-}
-
 main {
     width: 100%;
-    max-width: 700px;
-    padding: 50px 60px;
-    margin: 2rem 1rem;
-    background: var(--appBackgroundDark);
-    color: #fff;
-    border-radius: 0.25rem;
-    position: relative;
-    overflow-y: auto;
 
-    @media screen and (max-width: 426px) {
-        & {
-            margin: 0;
-            padding: 70px 20px 50px;
-            height: 100%;
-        }
+    .logo_container {
+        max-width: 73px;
+        margin-top: -50px;
+        margin-bottom: 35px;
+        margin-left: -45px;
     }
 }
-
-// .header {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     margin: 3px;
-
-//     a {
-//         border-radius: 3px;
-//         background: #fff;
-//         color: var(--customBlue);
-//     }
-// }
 
 .logoutBtn {
     display: flex;
@@ -245,7 +219,7 @@ main {
 
     & span {
         margin-right: 0.5rem;
-        font-size: 13px;
+        font-size: 12px;
     }
 
     & svg {
@@ -257,24 +231,6 @@ main {
 
 .welcome-text {
     padding-bottom: 30px;
-    text-align: center;
-
-    h1 {
-        font-size: 35px;
-        text-shadow: 0.5px 0.5px 1px var(--customParaText);
-        letter-spacing: 0.5px;
-
-        @media screen and (max-width: 426px) {
-            & {
-                font-size: 30px;
-            }
-        }
-    }
-
-    p {
-        color: #fff;
-        font-size: 15px;
-    }
 }
 
 .nav-pills .nav-link {
@@ -290,34 +246,6 @@ main {
 
 .nav-pills .nav-link.active {
     background: var(--customBlue);
-}
-
-.tab-content {
-    text-transform: capitalize;
-    margin-top: 1.75rem;
-}
-
-form {
-    label {
-        font-size: 15px;
-    }
-
-    input,
-    input::placeholder {
-        font-size: 13px;
-    }
-
-    .form-text {
-        color: var(--customParaText);
-        font-style: italic;
-        font-size: 12px;
-        margin-top: 10px;
-    }
-}
-
-.form-check-input:checked {
-    background-color: var(--customBlue);
-    border-color: var(--customBlue);
 }
 
 form button {
@@ -353,8 +281,8 @@ form button {
 
         & svg {
             fill: var(--errorColor);
-            height: 16px;
-            width: 16px;
+            height: 1rem;
+            width: 1rem;
             margin-right: 0.25rem;
         }
     }
