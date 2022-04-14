@@ -133,7 +133,7 @@ body {
 
             h1 {
                 font-size: 35px;
-                text-shadow: 0.5px 0.5px 1px var(--customParaText);
+                text-shadow: 0.5px 0.75px 2px var(--customParaText);
                 letter-spacing: 0.5px;
 
                 @media screen and (max-width: 426px) {
@@ -145,7 +145,7 @@ body {
 
             p {
                 color: #fff;
-                font-size: 15px;
+                font-size: 1rem;
             }
         }
 
@@ -155,19 +155,15 @@ body {
         }
 
         form {
-            label {
-                font-size: 15px;
-            }
-
             input,
             input::placeholder {
-                font-size: 13px;
+                font-size: 14px;
             }
 
             .form-text {
                 color: #bbb;
                 font-style: italic;
-                font-size: 12px;
+                font-size: 13px;
                 margin-top: 10px;
             }
         }

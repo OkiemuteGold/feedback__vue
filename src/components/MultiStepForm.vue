@@ -28,7 +28,10 @@
                 </div>
 
                 <h3 class="tab_title mt-5">Consumer Info</h3>
-                <p class="instruction">All fields are required**</p>
+                <p class="instruction">
+                    Please fill in details using the fields provided... All
+                    fields are required**
+                </p>
 
                 <div
                     class="tab_item"
@@ -746,7 +749,8 @@ export default {
     }
 
     .instruction {
-        color: var(--customParaText);
+        font-size: 14px;
+        color: #bbb;
     }
 }
 
@@ -799,7 +803,7 @@ select,
 input,
 textarea {
     width: 100%;
-    font-size: 15px;
+    font-size: 14px;
     border: 1px solid #bbb;
     border-radius: 0.25rem;
     padding: 10px;

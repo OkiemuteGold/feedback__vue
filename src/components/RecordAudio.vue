@@ -404,6 +404,10 @@ export default {
         font-size: 15px;
     }
 
+    input {
+        font-size: 14px;
+    }
+
     audio {
         width: 100%;
         margin-bottom: 1.25rem;
@@ -421,7 +425,7 @@ export default {
         display: inline-block;
         margin-bottom: 0.5rem;
         text-transform: capitalize;
-        font-size: 16px;
+        font-size: 1rem;
     }
 }
 
@@ -442,7 +446,7 @@ export default {
     & .btn {
         display: flex;
         align-items: center;
-        font-size: 13px;
+        font-size: 14px;
 
         svg {
             fill: #fff;
@@ -482,5 +486,9 @@ export default {
 #record_state_message {
     font-style: italic;
     text-transform: initial;
+}
+
+button {
+    font-size: 15px;
 }
 </style>

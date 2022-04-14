@@ -419,7 +419,7 @@ export default {
 
         label {
             margin-bottom: 0.5rem;
-            font-size: 16px;
+            font-size: 1rem;
         }
     }
 
@@ -435,6 +435,7 @@ export default {
         }
 
         & label {
+            font-size: 15px;
             border: 1px solid rgba(105, 105, 105, 0.3);
             border-radius: 0.25rem;
             width: fit-content;
@@ -459,7 +460,6 @@ export default {
     }
 
     p {
-        // font-size: 15px;
         color: #fff;
         margin-top: 1rem;
         text-transform: initial;
@@ -513,8 +513,8 @@ export default {
         }
     }
 
-    // button {
-    //     font-size: 15px;
-    // }
+    button {
+        font-size: 15px;
+    }
 }
 </style>
