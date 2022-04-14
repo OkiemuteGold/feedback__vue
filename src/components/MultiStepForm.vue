@@ -378,11 +378,15 @@ export default {
             return email;
         },
 
+        isValidPhone() {
+            let phoneNumber = this.validPhone(this.consumerPhone);
+            return phoneNumber;
+        },
+
         isValidTab1() {
             return (
                 this.promoterName !== "" &&
                 this.consumerName !== "" &&
-                this.consumerPhone !== "" &&
                 this.consumerAddress !== "" &&
                 this.date !== "" &&
                 this.gender !== "" &&
@@ -416,6 +420,7 @@ export default {
         isValid() {
             return (
                 this.isValidEmail &&
+                this.isValidPhone &&
                 this.isValidTab1 &&
                 this.isValidTab2 &&
                 this.isValidTab3
@@ -441,6 +446,14 @@ export default {
         validEmail(email) {
             let emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
             return emailReg.test(email);
+        },
+
+        validPhone(phoneNumber) {
+            return (
+                phoneNumber !== "" &&
+                phoneNumber.length >= 6 &&
+                phoneNumber.length < 12
+            );
         },
 
         getConsumerInfo(event) {
@@ -634,13 +647,26 @@ export default {
                 }
 
                 if (this.isValidTab1) {
-                    if (!this.isValidEmail) {
+                    if (!this.isValidPhone || !this.isValidEmail) {
                         this.error = true;
-                        this.errorMessage =
-                            "Please enter a valid email address";
                         $(".error_message_contianer").show();
-
                         this.currentTab = 0;
+
+                        if (!this.isValidEmail) {
+                            this.errorMessage =
+                                "Please enter a valid email address!";
+                        } else if (!this.isValidPhone) {
+                            if (this.consumerPhone.length == "") {
+                                this.errorMessage =
+                                    "Please enter phone number!";
+                            } else if (this.consumerPhone.length < 6) {
+                                this.errorMessage =
+                                    "Phone number is less than 6.";
+                            } else if (this.consumerPhone.length > 11) {
+                                this.errorMessage =
+                                    "Phone number is greater than 11.";
+                            }
+                        }
                     } else {
                         $(".error_message_contianer").hide();
                         this.currentTab = 1;
