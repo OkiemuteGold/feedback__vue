@@ -8,7 +8,7 @@
                 />
             </div>
 
-            <div class="logoutBtn" @click="logout()">
+            <div class="logoutBtn" @click="logout()" role="button">
                 <span>Logout</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                     <!-- <title>Logout</title> -->
@@ -16,6 +16,12 @@
                         d="M96 480h64C177.7 480 192 465.7 192 448S177.7 416 160 416H96c-17.67 0-32-14.33-32-32V128c0-17.67 14.33-32 32-32h64C177.7 96 192 81.67 192 64S177.7 32 160 32H96C42.98 32 0 74.98 0 128v256C0 437 42.98 480 96 480zM504.8 238.5l-144.1-136c-6.975-6.578-17.2-8.375-26-4.594c-8.803 3.797-14.51 12.47-14.51 22.05l-.0918 72l-128-.001c-17.69 0-32.02 14.33-32.02 32v64c0 17.67 14.34 32 32.02 32l128 .001l.0918 71.1c0 9.578 5.707 18.25 14.51 22.05c8.803 3.781 19.03 1.984 26-4.594l144.1-136C514.4 264.4 514.4 247.6 504.8 238.5z"
                     />
                 </svg>
+            </div>
+
+            <div class="view_all_feedback" v-if="showViewFeedbackBtn">
+                <button class="btn" @click="goToFeedbacksPage()">
+                    View Feedbacks
+                </button>
             </div>
 
             <div class="welcome-text">
@@ -136,9 +142,10 @@ import { fbase } from "../firebase";
 import MultiStepForm from "../components/MultiStepForm.vue";
 import UploadAudio from "../components/UploadAudio.vue";
 import RecordAudio from "../components/RecordAudio.vue";
+import adminUsers from "../../adminUsers";
 
 export default {
-    name: "Feedback",
+    name: "SubmitFeedback",
 
     components: { MultiStepForm, UploadAudio, RecordAudio },
     data() {
@@ -147,11 +154,8 @@ export default {
             recordAudio: true,
             notAvailable: false,
 
-            form: {
-                fullname: null,
-                email: null,
-                password: null,
-            },
+            showViewFeedbackBtn: false,
+            adminUsers,
         };
     },
 
@@ -164,6 +168,31 @@ export default {
 
         toggleAudioOption() {
             this.recordAudio = !this.recordAudio;
+        },
+
+        getauthorizedUsers() {
+            const user = fbase.auth().currentUser;
+            const uid = user.uid;
+            const adminUsers = this.adminUsers;
+
+            if (user !== null) {
+                user.providerData.forEach((profile) => {
+                    // console.log(profile);
+                    const profileId = profile.uid;
+
+                    adminUsers.forEach((admin) => {
+                        // console.log(uid, admin.uid, admin.profid);
+
+                        if (uid === admin.uid && profileId === admin.profid) {
+                            this.showViewFeedbackBtn = true;
+                        }
+                    });
+                });
+            }
+        },
+
+        goToFeedbacksPage() {
+            this.$router.replace("/feedbacks");
         },
 
         logout() {
@@ -180,6 +209,8 @@ export default {
     },
 
     mounted() {
+        this.getauthorizedUsers();
+
         setTimeout(() => {
             this.logout();
         }, 1000 * 60 * 60 * 3);
@@ -208,7 +239,7 @@ main {
     right: 2%;
     width: 100%;
     max-width: 85px;
-    padding: 2px;
+    padding: 0.125rem;
     border: 1px solid #fff;
     border-radius: 0.25rem;
     cursor: pointer;
@@ -229,8 +260,30 @@ main {
     }
 }
 
+// .view_all_feedback {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     position: absolute;
+//     top: 7.5%;
+//     right: 2%;
+
+//     .btn {
+//         font-size: 12px;
+//         background: var(--customBlue);
+//         color: #fff;
+//         padding: 0.25rem 0.5rem;
+//         border-radius: 0.25rem;
+
+//         &:hover {
+//             background: var(--appBackgroundLight);
+//         }
+//     }
+// }
+
 .welcome-text {
-    padding-bottom: 30px;
+    padding-top: 20px;
+    padding-bottom: 35px !important;
 }
 
 .nav-pills .nav-link {

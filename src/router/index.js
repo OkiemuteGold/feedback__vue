@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 // import Admin from '../views/Admin.vue'
 // import UserLogin from '../views/UserLogin.vue'
-import Feedback from '../views/Feedback.vue'
+import SubmitFeedback from '../views/SubmitFeedback.vue'
+import Feedbacks from '../views/Feedbacks.vue'
 
 // import Overview from '../admin-pages/Overview.vue'
 // import Products from '../admin-pages/Products.vue'
@@ -70,21 +71,41 @@ const routes = [
     //     component: UserLogin,
     // },
     {
-        path: '/feedback',
-        name: 'Feedback',
-        component: Feedback,
+        path: '/submit-feedback',
+        name: 'SubmitFeedback',
+        component: SubmitFeedback,
         meta: {
             requiresAuth: true,
-            title: "Feedback form page",
+            title: "Submit feedback form page",
             metaTags: [
                 {
                     name: "description",
                     content:
-                        "Feedback form page to collect all consumers feedbacks",
+                        "Submit feedback form page to collect all consumers feedbacks",
                 },
                 {
                     property: "og:description",
-                    content: "Feedback form page to collect all consumers feedbacks",
+                    content: "Submit feedback form page to collect all consumers feedbacks",
+                },
+            ],
+        },
+    },
+    {
+        path: '/feedbacks',
+        name: 'Feedbacks',
+        component: Feedbacks,
+        meta: {
+            requiresAuth: true,
+            title: "Feedbacks page",
+            metaTags: [
+                {
+                    name: "description",
+                    content:
+                        "Feedbacks page for all consumers feedbacks collected",
+                },
+                {
+                    property: "og:description",
+                    content: "Feedbacks page for all consumers feedbacks collected",
                 },
             ],
         },

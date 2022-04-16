@@ -92,6 +92,11 @@ body {
         background: #9a9a9a;
     }
 
+    input,
+    input::placeholder {
+        color: var(--appBackgroundLight) !important;
+    }
+
     .user-login {
         width: 100vw;
         height: 100vh;
@@ -115,7 +120,7 @@ body {
             @media screen and (max-width: 426px) {
                 & {
                     margin: 0;
-                    padding: 70px 25px 50px;
+                    padding: 70px 20px 50px;
                     height: 100%;
                     width: 100%;
 
@@ -135,17 +140,20 @@ body {
                 font-size: 35px;
                 text-shadow: 0.5px 0.75px 2px var(--customParaText);
                 letter-spacing: 0.5px;
-
-                @media screen and (max-width: 426px) {
-                    & {
-                        font-size: 28px;
-                    }
-                }
             }
 
             p {
                 color: #fff;
                 font-size: 1rem;
+            }
+
+            @media screen and (max-width: 426px) {
+                & h1 {
+                    font-size: 28px;
+                }
+                & p {
+                    font-size: 15px;
+                }
             }
         }
 
@@ -171,6 +179,28 @@ body {
         .form-check-input:checked {
             background-color: var(--customBlue);
             border-color: var(--customBlue);
+        }
+
+        .back_to_submit_feedback,
+        .view_all_feedback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 8%;
+            right: 2%;
+
+            .btn {
+                font-size: 12px;
+                background: var(--customBlue);
+                color: #fff;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+
+                &:hover {
+                    background: var(--appBackgroundLight);
+                }
+            }
         }
     }
 
@@ -261,6 +291,33 @@ body {
     hr {
         margin-top: 1.5rem;
         margin-bottom: 1.5rem;
+    }
+
+    // pagination
+    .pagination_container {
+        .page-link {
+            color: var(--customBlueLight);
+            cursor: pointer;
+        }
+
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: var(--customBlueLight);
+            border-color: var(--customBlueLight);
+        }
+
+        .page-item.disabled .page-link {
+            color: var(--appBackgroundLight);
+        }
+
+        .page-item.disabled {
+            cursor: not-allowed !important;
+        }
+
+        .VuePagination__count {
+            font-size: 15px !important;
+        }
     }
 }
 </style>

@@ -246,7 +246,7 @@ export default {
         },
 
         getAudio(event) {
-            console.log(event);
+            // console.log(event);
             let allFiles = event.target.files;
             this.getFiles(allFiles);
         },
@@ -296,12 +296,12 @@ export default {
                         .then((downloadUrl) => {
                             this.audioUrl = downloadUrl;
 
-                            console.log("File available at", downloadUrl);
+                            // console.log("File available at", downloadUrl);
                         });
                 }
             );
 
-            console.log(audio, this.audioUrl);
+            // console.log(audio, this.audioUrl);
         },
 
         initDragAndDrop(event) {
@@ -348,7 +348,7 @@ export default {
             forestRef
                 .updateMetadata(newMetadata)
                 .then((metadata) => {
-                    console.log(metadata);
+                    // console.log(metadata);
                     this.consumerName = "";
                     this.resetFeedbackData();
 
@@ -376,13 +376,13 @@ export default {
                     FeedbackCreatedAt: this.convertEpochDate(new Date()),
                 };
 
-                console.log(audioFileData);
+                // console.log(audioFileData);
 
                 db.collection("AudioFeedbacks")
                     .add(audioFileData)
                     .then((audioRef) => {
                         audioRef;
-                        console.log("Audio written with ID: ", audioRef.id);
+                        // console.log("Audio written with ID: ", audioRef.id);
 
                         this.updateFileMetaWithId(audioRef.id);
                     })

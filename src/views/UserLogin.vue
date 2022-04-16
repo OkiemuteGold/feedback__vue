@@ -79,19 +79,24 @@
                                 >Password</label
                             >
                             <input
-                                type="password"
+                                :type="
+                                    !isShownLoginPassword ? 'password' : 'text'
+                                "
                                 class="form-control"
                                 id="loginPassword"
                                 aria-describedby="passwordHelp"
                                 placeholder="Enter your password"
                                 v-model="form.password"
                             />
-                            <!-- <div id="passwordHelp" class="form-text">
-                                Password must be 8-20 characters long, and must
-                                contain letters and numbers.
-
-                                {{ loginHelp }}
-                            </div> -->
+                            <i
+                                class="fas fa-eye"
+                                :class="[
+                                    !isShownLoginPassword
+                                        ? 'fa-eye'
+                                        : 'fa-eye-slash',
+                                ]"
+                                @click.stop="showLoginPassword()"
+                            ></i>
 
                             {{ loginHelp }}
                         </div>
@@ -165,17 +170,26 @@
                                 >Password</label
                             >
                             <input
-                                type="password"
+                                :type="
+                                    !isShownSignupPassword ? 'password' : 'text'
+                                "
                                 class="form-control"
                                 id="signupPassword"
                                 aria-describedby="passwordHelp"
                                 placeholder="Enter your password"
                                 v-model="form.password"
                             />
-                            <div id="passwordHelp" class="form-text">
-                                <!-- Password must be 8-20 characters long, and must
-                                contain letters and numbers. -->
+                            <i
+                                class="fas fa-eye"
+                                :class="[
+                                    !isShownSignupPassword
+                                        ? 'fa-eye'
+                                        : 'fa-eye-slash',
+                                ]"
+                                @click.stop="showSignupPassword()"
+                            ></i>
 
+                            <div id="passwordHelp" class="form-text">
                                 {{ passwordHelp }}
                             </div>
                         </div>
@@ -221,6 +235,10 @@ export default {
 
     data() {
         return {
+            type: "password",
+            isShownLoginPassword: false,
+            isShownSignupPassword: false,
+
             instructionText: "Please Login or Signup to continue",
             loginHelp: "",
             passwordHelp: "",
@@ -249,9 +267,15 @@ export default {
     },
 
     methods: {
-        changeInstructionText(action) {
-            // console.log(action.toLowerCase());
+        showLoginPassword() {
+            this.isShownLoginPassword = !this.isShownLoginPassword;
+        },
 
+        showSignupPassword() {
+            this.isShownSignupPassword = !this.isShownSignupPassword;
+        },
+
+        changeInstructionText(action) {
             action.toLowerCase() == "login"
                 ? (this.instructionText = "Please Login")
                 : (this.instructionText = "Please Signup");
@@ -268,7 +292,7 @@ export default {
                     // $("#loginModal").modal("hide");
 
                     setTimeout(() => {
-                        this.$router.replace("/feedback");
+                        this.$router.replace("/submit-feedback");
                         this.isLoading = false;
                     }, 700);
                 })
@@ -306,9 +330,13 @@ export default {
                     // clear field only when its successful
                     this.resetFormData();
                     setTimeout(() => {
-                        this.$router.replace("/feedback");
+                        // this.$router.replace("/submit-feedback");
+                        this.passwordHelp = `
+                            Signup with ${this.form.email} is successful. Please login!
+                        `;
+
                         this.isLoading = false;
-                    }, 700);
+                    }, 800);
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -334,6 +362,16 @@ export default {
             //     password: null,
             // };
         },
+
+        // sendVerificationEmail() {
+        //     fbase
+        //         .auth()
+        //         .currentUser.sendEmailVerification()
+        //         .then(() => {
+        //             // Email verification sent!
+        //             // ...
+        //         });
+        // },
     },
 };
 </script>
@@ -357,6 +395,19 @@ main .logo_container {
 
 .nav-pills .nav-link.active {
     background: var(--customBlue);
+}
+
+.form-group {
+    position: relative;
+
+    .fas.fa-eye {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        padding: 0.125rem;
+        color: var(--appBackgroundLight);
+        cursor: pointer;
+    }
 }
 
 form button {

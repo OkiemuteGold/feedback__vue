@@ -246,7 +246,7 @@ export default {
                         };
 
                         mediaRecorder.onstop = () => {
-                            console.log("recorder stopped");
+                            // console.log("recorder stopped");
 
                             // type: ["audio/ogg; codecs=opus"],
                             const blob = new Blob(chunks, {
@@ -335,7 +335,7 @@ export default {
                 FeedbackCreatedAt: this.convertEpochDate(new Date()),
             };
 
-            console.log(recordedData);
+            // console.log(recordedData);
 
             db.collection("RecordedFeedbacks/")
                 .add(recordedData)

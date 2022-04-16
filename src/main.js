@@ -6,6 +6,7 @@ import store from './store'
 import jQuery from 'jquery'
 import { fbase } from './firebase'
 import VueFirestore from 'vue-firestore'
+import Pagination from 'vue-pagination-2';
 
 window.$ = window.jQuery = jQuery;
 
@@ -24,6 +25,7 @@ Vue.directive("scroll_animation", ScrollAnimation);
 // });
 
 Vue.use(VueFirestore);
+Vue.component('pagination', Pagination);
 
 Vue.config.productionTip = false
 

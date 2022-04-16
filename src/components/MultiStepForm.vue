@@ -543,36 +543,17 @@ export default {
                 CreatedAt: new Date(),
             };
 
-            console.log(feedbackData);
+            // console.log(feedbackData);
 
             db.collection("feedbacks")
                 .add(feedbackData)
                 .then((docRef) => {
                     docRef;
-                    console.log("Document written with ID: ", docRef.id);
+                    // console.log("Document written with ID: ", docRef.id);
                 })
                 .catch((error) => {
                     error;
                     console.error("Error adding document: ", error);
-                });
-        },
-
-        getFormFeedbacks() {
-            /* And use .orderBy("createdAt").onSnapshot() to order by time
-                replace .get().then() with .onSnapshot() for realtime update
-            */
-            db.collection("feedbacks")
-                .orderBy("createdAt")
-                .get()
-                .then((querySnapshot) => {
-                    let allFeebacks = [];
-
-                    querySnapshot.forEach((doc) => {
-                        allFeebacks.push(doc.data());
-                    });
-
-                    this.allFeedbacks = allFeebacks;
-                    console.log(this.allFeedbacks);
                 });
         },
 
@@ -695,10 +676,6 @@ export default {
         this.currentTab = 0;
         this.showTab(this.currentTab);
         this.removeErrorMessage();
-    },
-
-    created() {
-        this.getFormFeedbacks();
     },
 };
 </script>
