@@ -1,8 +1,8 @@
 .DS_Store
 node_modules
 /dist
+/adminUsers
 /sample.txt
-/adminUsers.js
 
 
 # local env files
