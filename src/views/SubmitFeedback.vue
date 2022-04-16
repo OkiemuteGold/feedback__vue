@@ -142,7 +142,7 @@ import { fbase } from "../firebase";
 import MultiStepForm from "../components/MultiStepForm.vue";
 import UploadAudio from "../components/UploadAudio.vue";
 import RecordAudio from "../components/RecordAudio.vue";
-import adminUsers from "../../adminUsers";
+import adminUsers from "../../adminUsers.txt";
 
 export default {
     name: "SubmitFeedback",
