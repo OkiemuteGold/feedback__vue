@@ -1,0 +1,52 @@
+.audio_modal {
+  width: 100%;
+  max-width: 260px;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+
+  @media screen and (min-width: 350px) {
+    max-width: 300px;
+  }
+
+  & * {
+    border: none;
+  }
+
+  .modal-content {
+    background: transparent;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .modal-header {
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.325),
+      rgba(255, 255, 255, 0.325)
+    );
+    backdrop-filter: blur(5px);
+    padding: 0.85rem 0.65rem;
+  }
+
+  .modal-title {
+    font-size: 15px;
+    color: #000;
+  }
+
+  .modal-body {
+    padding: 1rem 0.65rem;
+    background: transparent;
+  }
+
+  button {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  audio {
+    width: 100%;
+  }
+}

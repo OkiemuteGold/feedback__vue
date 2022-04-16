@@ -8,16 +8,16 @@
             >
                 <h2 class="promoter">Consumer: {{ feedback.ConsumerName }}</h2>
                 <p>
-                    <span class="sub_title">Upload Date:</span>
-                    {{ feedback.FeedbackCreatedAt }}
-                </p>
-                <p>
                     <span class="sub_title">Reference Name:</span>
                     {{ feedback.RecordName }}
                 </p>
                 <p v-if="audioSize">
                     <span class="sub_title">File Size:</span>
                     {{ feedback.Size }}
+                </p>
+                <p>
+                    <span class="sub_title">Upload Date:</span>
+                    {{ feedback.FeedbackCreatedAt }}
                 </p>
 
                 <!-- <p>
@@ -34,7 +34,7 @@
                     type="button"
                     class="btn btn-primary play_button"
                     data-bs-toggle="modal"
-                    :data-bs-target="`#modal${index}`"
+                    :data-bs-target="`#modalRec${index}`"
                 >
                     <svg
                         data-v-0eb3a1f7=""
@@ -49,26 +49,26 @@
                     Click to play audio
                 </button>
 
-                <AudioModal :feedback="feedback" :index="index" />
+                <audioRecordModal :feedback="feedback" :index="index" />
 
                 <hr />
-            </div>
-
-            <div
-                class="pagination_container"
-                v-if="displayedFeedbacks && records > 1"
-            >
-                <pagination
-                    v-model="page"
-                    :records="records"
-                    :per-page="perPage"
-                    @paginate="getRecordedAudioRefernce"
-                />
             </div>
         </div>
 
         <div class="error_message" v-else>
             <p class="error_text">{{ errorMessage }}</p>
+        </div>
+
+        <div
+            class="pagination_container"
+            v-if="displayedFeedbacks && records > 1"
+        >
+            <pagination
+                v-model="page"
+                :records="records"
+                :per-page="perPage"
+                @paginate="getRecordedAudioRefernce"
+            />
         </div>
     </div>
 </template>
@@ -77,13 +77,13 @@
 // import $ from "jquery";
 import "@/mixins";
 import { db } from "../firebase";
-import AudioModal from "./extra/audioModal.vue";
+import audioRecordModal from "./extra/audioRecordModal.vue";
 
 export default {
     name: "Feedbacks",
 
     components: {
-        AudioModal,
+        audioRecordModal,
     },
 
     data() {
@@ -96,7 +96,7 @@ export default {
             perSize: 2,
             perPage: null,
 
-            errorMessage: "Feedback currently not available.",
+            errorMessage: "No Feedback Available.",
         };
     },
 
@@ -115,7 +115,7 @@ export default {
                 y = this.page * this.perSize;
 
             let allFeedbacks = this.allFeedbacks.slice(x, y);
-            console.log(allFeedbacks);
+            // console.log(allFeedbacks);
 
             this.displayedFeedbacks = allFeedbacks;
 
@@ -147,31 +147,6 @@ export default {
                     // this.errorMessage = error.message;
                 };
         },
-
-        // getUploadedAudios() {
-        //     var storageRef = fbase.storage().ref();
-        //     // Create a reference under which you want to list
-        //     var listRef = storageRef.child("files/uid");
-
-        //     // Find all the prefixes and items.
-        //     listRef
-        //         .listAll()
-        //         .then((res) => {
-        //             res.prefixes.forEach((folderRef) => {
-        //                 // All the prefixes under listRef.
-        //                 // You may call listAll() recursively on them.
-        //                 console.log(folderRef);
-        //             });
-        //             res.items.forEach((itemRef) => {
-        //                 // All the items under listRef.
-        //                 console.log(itemRef);
-        //             });
-        //         })
-        //         .catch((error) => {
-        //             // Uh-oh, an error occurred!
-        //             console.log(error);
-        //         });
-        // },
     },
 
     mounted() {
@@ -181,63 +156,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.promoter {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.feedbacks_container {
-    margin-bottom: 1.5rem;
-
-    & p {
-        color: #ccc;
-        font-size: 15px;
-        text-transform: initial;
-        margin-bottom: 0.85rem;
-
-        .sub_title {
-            font-size: 16px;
-            color: #fff;
-        }
-    }
-}
-
-.play_button {
-    display: flex;
-    align-items: center;
-    font-size: 15px;
-    background: transparent;
-    border-color: var(--customBlue);
-    color: #ccc;
-    padding: 0.25rem 0.5rem;
-
-    &:active,
-    &:focus,
-    &:hover {
-        background: var(--appBackgroundLight);
-        border-color: var(--appBackgroundLight);
-        color: #ccc;
-    }
-
-    svg {
-        fill: var(--errorColor);
-        height: 12px;
-        width: 12px;
-        margin-right: 0.5rem;
-    }
-}
-
-.error_message {
-    width: 100%;
-    max-width: 270px;
-    margin: 2rem auto 0;
-    text-align: center;
-
-    .error_text {
-        font-weight: 300;
-        font-size: 1rem;
-        font-style: italic;
-        line-height: 1.5;
-    }
-}
+@import "@/assets/styles/_allFeedbacks.scss";
 </style>

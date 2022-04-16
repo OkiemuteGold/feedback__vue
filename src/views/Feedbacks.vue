@@ -150,6 +150,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/styles/_logoLogout.scss";
+@import "@/assets/styles/_navTabs.scss";
+
 main {
     // max-width: 750px !important;
     min-height: 400px;
@@ -173,7 +176,4 @@ main {
         }
     }
 }
-
-@import "@/assets/styles/_logoLogout.scss";
-@import "@/assets/styles/_navTabs.scss";
 </style>

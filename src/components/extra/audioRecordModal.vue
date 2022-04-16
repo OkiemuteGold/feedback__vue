@@ -1,25 +1,25 @@
 <template>
-    <!-- Modal -->
+    <!-- data-bs-backdrop="static"
+    data-bs-keyboard="false" -->
     <div
         class="modal fade audio_modal"
-        :id="`modal${index}`"
+        :id="`modalRec${index}`"
         tabindex="-1"
-        :aria-labelledby="`modal${index}Label`"
+        :aria-labelledby="`modalRec${index}Label`"
         aria-hidden="true"
     >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <p class="modal-title" :id="`modal${index}Label`">
+                    <p class="modal-title" :id="`modalRec${index}Label`">
                         Consumer: {{ feedback.ConsumerName }}
                     </p>
                     <button
                         type="button"
+                        class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
-                    >
-                        X
-                    </button>
+                    ></button>
                 </div>
                 <div class="modal-body d-flex justify-content-center">
                     <audio :src="feedback.DownloadUrl" controls></audio>
@@ -32,19 +32,9 @@
 <script>
 export default {
     props: ["feedback", "index"],
-
-    mounted() {
-        // console.log(this.feedback);
-    },
 };
 </script>
 
 <style lang="scss" scoped>
-.audio_modal .modal-content {
-    background: rgba(0, 0, 0, 0.8);
-
-    // .modal-header .btn-close {
-    //     color: #fff;
-    // }
-}
+@import "@/assets/styles/_modals.scss";
 </style>

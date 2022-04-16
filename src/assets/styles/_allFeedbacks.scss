@@ -1,0 +1,58 @@
+.promoter {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.feedbacks_container {
+  margin-bottom: 1.5rem;
+
+  & p {
+    font-size: 14px;
+    color: #ccc;
+    text-transform: initial;
+
+    .sub_title {
+      font-size: 15px;
+      color: #fff;
+    }
+  }
+}
+
+.play_button {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  background: transparent;
+  border-color: var(--customBlue);
+  color: #ccc;
+  padding: 0.25rem 0.5rem;
+
+  &:active,
+  &:focus,
+  &:hover {
+    background: var(--appBackgroundLight);
+    border-color: var(--appBackgroundLight);
+    color: #ccc;
+  }
+
+  svg {
+    fill: var(--errorColor);
+    height: 12px;
+    width: 12px;
+    margin-right: 0.5rem;
+  }
+}
+
+.error_message {
+  width: 100%;
+  max-width: 270px;
+  margin: 2rem auto 0;
+  text-align: center;
+
+  .error_text {
+    font-weight: 300;
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+}

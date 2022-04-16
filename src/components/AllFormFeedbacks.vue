@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="form-group tab" v-if="isFeedbackAvailable">
-            <div v-for="feedback in displayedFeedbacks" :key="feedback.id">
+            <div v-for="(feedback, index) in displayedFeedbacks" :key="index">
                 <h2 class="promoter">Promoter: {{ feedback.Promoter }}</h2>
                 <p class="date">Date: {{ feedback.Date }}</p>
 
@@ -73,22 +73,22 @@
                     </span>
                 </div>
             </div>
-
-            <div
-                class="pagination_container"
-                v-if="displayedFeedbacks && records > 1"
-            >
-                <pagination
-                    v-model="page"
-                    :records="records"
-                    :per-page="perPage"
-                    @paginate="nextPrevFeedback"
-                />
-            </div>
         </div>
 
         <div class="error_message" v-else>
             <p class="error_text">{{ errorMessage }}</p>
+        </div>
+
+        <div
+            class="pagination_container"
+            v-if="displayedFeedbacks && records > 1"
+        >
+            <pagination
+                v-model="page"
+                :records="records"
+                :per-page="perPage"
+                @paginate="nextPrevFeedback"
+            />
         </div>
     </div>
 </template>
@@ -109,7 +109,7 @@ export default {
             perSize: 2,
             perPage: null,
 
-            errorMessage: "Feedback currently not available.",
+            errorMessage: "No Feedback Available.",
         };
     },
 
@@ -179,6 +179,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/styles/_allFeedbacks.scss";
+
 .tab p {
     font-size: 15px;
 }
@@ -190,7 +192,6 @@ export default {
 .feedbacks_container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    margin-bottom: 1.25rem;
 
     .title {
         font-size: 1.25rem;
@@ -199,14 +200,7 @@ export default {
     }
 
     & p {
-        color: #ccc;
-        font-size: 15px;
         font-weight: 300;
-        text-transform: initial;
-
-        .sub_title {
-            color: #fff;
-        }
     }
 
     @media screen and (max-width: 426px) {
@@ -217,20 +211,6 @@ export default {
         & span p:last-child {
             margin-bottom: 0;
         }
-    }
-}
-
-.error_message {
-    width: 100%;
-    max-width: 270px;
-    margin: 2rem auto 0;
-    text-align: center;
-
-    .error_text {
-        font-weight: 300;
-        font-size: 1rem;
-        font-style: italic;
-        line-height: 1.5;
     }
 }
 </style>

@@ -377,6 +377,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/styles/_navTabs.scss";
+
 main .logo_container {
     max-width: 73px;
     margin: -40px auto 35px;
@@ -426,6 +428,4 @@ form button {
         vertical-align: text-bottom;
     }
 }
-
-@import "@/assets/styles/_navTabs.scss";
 </style>

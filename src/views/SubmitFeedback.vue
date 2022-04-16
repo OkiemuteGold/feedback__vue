@@ -219,6 +219,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/styles/_logoLogout.scss";
+@import "@/assets/styles/_navTabs.scss";
+
 // .view_all_feedback {
 //     display: flex;
 //     align-items: center;
@@ -284,7 +287,4 @@ form button {
         }
     }
 }
-
-@import "@/assets/styles/_logoLogout.scss";
-@import "@/assets/styles/_navTabs.scss";
 </style>
