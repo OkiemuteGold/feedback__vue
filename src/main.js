@@ -12,7 +12,7 @@ window.$ = window.jQuery = jQuery;
 
 import "popper.js";
 import "bootstrap";
-import "./assets/app.scss";
+import "./assets/styles/app.scss";
 
 import ScrollAnimation from "./directives/scroll_animation"
 Vue.directive("scroll_animation", ScrollAnimation);

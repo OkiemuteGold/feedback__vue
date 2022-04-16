@@ -204,69 +204,6 @@ body {
         }
     }
 
-    // input[type="radio"] {
-    //     accent-color: var(--customBlueLight);
-    //     width: 0.875rem;
-    //     height: 0.875rem;
-    // }
-
-    input[type="radio"] {
-        width: 1rem;
-        height: 1rem;
-        padding: 0.6rem 0.625rem;
-        -webkit-appearance: none;
-        appearance: none;
-        display: grid;
-        place-content: center;
-
-        font: inherit;
-        border: 0.1rem solid rgba(105, 105, 105, 0.3);
-        border-radius: 0.25rem;
-    }
-
-    input[type="radio"]::before {
-        content: "";
-        width: 0.75rem;
-        height: 0.45rem;
-        border-left: 0.15rem solid var(--customBlueLight);
-        border-bottom: 0.15rem solid var(--customBlueLight);
-        border-radius: 0.125rem;
-        transform: scale(0);
-        /* for checkmark shape
-            transform-origin: bottom left;
-            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-        */
-        transition: 120ms transform ease-in-out;
-    }
-
-    input[type="radio"]:focus,
-    input[type="radio"]:checked {
-        background: rgba(105, 105, 105, 0.3);
-        border-color: transparent;
-        outline: max(0rem, 0.015rem) solid rgba(105, 105, 105, 0.3);
-        outline-offset: max(0rem, 0.125rem);
-    }
-
-    input[type="radio"]:focus {
-        outline-offset: max(0rem, 0.15rem);
-    }
-
-    input[type="radio"]:checked::before {
-        transform: scale(1) rotate(-30deg) translate(1px, -1.5px);
-        animation: checkMark 0.65s ease-in-out;
-    }
-
-    @keyframes checkMark {
-        from {
-            height: 0.45rem;
-            width: 0rem;
-        }
-        to {
-            height: 0.45rem;
-            width: 0.75rem;
-        }
-    }
-
     // input:focus,
     button:focus,
     .btn:active,
@@ -294,30 +231,7 @@ body {
     }
 
     // pagination
-    .pagination_container {
-        .page-link {
-            color: var(--customBlueLight);
-            cursor: pointer;
-        }
-
-        .page-item.active .page-link {
-            z-index: 3;
-            color: #fff;
-            background-color: var(--customBlueLight);
-            border-color: var(--customBlueLight);
-        }
-
-        .page-item.disabled .page-link {
-            color: var(--appBackgroundLight);
-        }
-
-        .page-item.disabled {
-            cursor: not-allowed !important;
-        }
-
-        .VuePagination__count {
-            font-size: 15px !important;
-        }
-    }
+    @import "@/assets/styles/_radioInputs.scss";
+    @import "@/assets/styles/_pagination.scss";
 }
 </style>

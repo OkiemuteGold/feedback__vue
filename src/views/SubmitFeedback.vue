@@ -219,47 +219,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-main {
-    width: 100%;
-
-    .logo_container {
-        max-width: 73px;
-        margin-top: -50px;
-        margin-bottom: 35px;
-        margin-left: -45px;
-    }
-}
-
-.logoutBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 2%;
-    right: 2%;
-    width: 100%;
-    max-width: 85px;
-    padding: 0.125rem;
-    border: 1px solid #fff;
-    border-radius: 0.25rem;
-    cursor: pointer;
-
-    &:hover {
-        transform: scale(0.98);
-    }
-
-    & span {
-        margin-right: 0.5rem;
-        font-size: 12px;
-    }
-
-    & svg {
-        fill: #fff;
-        height: 1rem;
-        width: 1rem;
-    }
-}
-
 // .view_all_feedback {
 //     display: flex;
 //     align-items: center;
@@ -284,21 +243,6 @@ main {
 .welcome-text {
     padding-top: 20px;
     padding-bottom: 35px !important;
-}
-
-.nav-pills .nav-link {
-    text-transform: uppercase;
-    color: var(--customBlue);
-    font-size: 15px;
-
-    &:not(.nav-link.active):hover {
-        color: var(--customBlueLight);
-        background: rgba(0, 0, 0, 0.2);
-    }
-}
-
-.nav-pills .nav-link.active {
-    background: var(--customBlue);
 }
 
 form button {
@@ -340,4 +284,7 @@ form button {
         }
     }
 }
+
+@import "@/assets/styles/_logoLogout.scss";
+@import "@/assets/styles/_navTabs.scss";
 </style>

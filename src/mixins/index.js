@@ -51,5 +51,29 @@ Vue.mixin({
 
             return (this.lastModifiedDate = dateOutput);
         },
+
+        validateSize(fileSize) {
+            let stringSize = String(fileSize);
+
+            if (stringSize.length < 3) {
+                this.showFileInfo = false;
+                this.successMessage = `
+                    Please upload an audio file higher than ${fileSize} bytes.
+                `;
+            } else {
+                this.showFileInfo = true;
+
+                if (stringSize.length <= 6) {
+                    this.audioSize = `
+                        ${(fileSize / 1000).toFixed(2)}kb
+                    `;
+                }
+                if (stringSize.length > 6) {
+                    this.audioSize = `
+                        ${(fileSize / 1000 / 1000).toFixed(2)}mb
+                    `;
+                }
+            }
+        },
     },
 });

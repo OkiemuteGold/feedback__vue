@@ -29,99 +29,84 @@
                 <!-- <hr /> -->
             </div>
 
-            <div class="form-group tab" v-if="isFeedbackAvailable">
-                <div v-for="feedback in displayedFeedbacks" :key="feedback.id">
-                    <hr />
+            <ul
+                class="nav nav-tabs nav-pills nav-justified pb-3"
+                id="pills-tab"
+                role="tablist"
+            >
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link active"
+                        id="pills-formUpload-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#pills-formUpload"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-formUpload"
+                        aria-selected="true"
+                    >
+                        Form Upload
+                    </button>
+                </li>
 
-                    <h2 class="promoter">Promoter: {{ feedback.Promoter }}</h2>
-                    <p class="date">Date: {{ feedback.Date }}</p>
+                <!-- <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link"
+                        id="pills-uploadedAudio-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#pills-uploadedAudio"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-uploadedAudio"
+                        aria-selected="false"
+                    >
+                        Uploaded Audio
+                    </button>
+                </li> -->
 
-                    <hr />
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link"
+                        id="pills-recordedAudio-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#pills-recordedAudio"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-recordedAudio"
+                        aria-selected="false"
+                    >
+                        Recorded Audio
+                    </button>
+                </li>
+            </ul>
 
-                    <div class="feedbacks_container">
-                        <span>
-                            <h3 class="title">Consumer Info</h3>
-                            <p>
-                                <span class="sub_title">Name:</span>
-                                {{ feedback.Consumer }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Age:</span>
-                                {{ feedback.Age }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Gender:</span>
-                                {{ feedback.Gender }}
-                            </p>
-
-                            <p>
-                                <span class="sub_title">E-mail:</span>
-                                {{ feedback.ConsumerEmail }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Phone No:</span>
-                                {{ feedback.ConsumerPhone }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Address:</span>
-                                {{ feedback.ConsumerAddress }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Would Buy:</span>
-                                {{ feedback.WouldBuy }}
-                            </p>
-                        </span>
-                        <span>
-                            <h3 class="title">Feedback</h3>
-                            <p>
-                                <span class="sub_title">Sampling Option:</span>
-                                {{ feedback.SamplingOption }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Taste Ratings:</span>
-                                {{ feedback.TasteRatings }}
-                            </p>
-                            <p>
-                                <span class="sub_title"
-                                    >Experience Ratings:</span
-                                >
-                                {{ feedback.ExperienceRatings }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Package Ratings:</span>
-                                {{ feedback.PackageRatings }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Overall Ratings:</span>
-                                {{ feedback.OverallRatings }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Would Recommend:</span>
-                                {{ feedback.WouldRecommend }}
-                            </p>
-                            <p>
-                                <span class="sub_title">Recommendation:</span>
-                                {{ feedback.Question1Response }}
-                            </p>
-                        </span>
-                    </div>
+            <div class="tab-content" id="pills-tabContent">
+                <div
+                    class="tab-pane fade show active"
+                    id="pills-formUpload"
+                    role="tabpanel"
+                    aria-labelledby="pills-formUpload-tab"
+                >
+                    <AllFormFeedbacks />
                 </div>
+
+                <!-- <div
+                    class="tab-pane fade"
+                    id="pills-uploadedAudio"
+                    role="tabpanel"
+                    aria-labelledby="pills-uploadedAudio-tab"
+                >
+                    <MultiStepForm />
+                </div> -->
 
                 <div
-                    class="pagination_container"
-                    v-if="displayedFeedbacks && records > 1"
+                    class="tab-pane fade"
+                    id="pills-recordedAudio"
+                    role="tabpanel"
+                    aria-labelledby="pills-recordedAudio-tab"
                 >
-                    <pagination
-                        v-model="page"
-                        :records="records"
-                        :per-page="perPage"
-                        @paginate="nextPrevFeedback"
-                    />
+                    <AllRecordedAudios />
                 </div>
-            </div>
-
-            <div class="error_message" v-else>
-                <p class="error_text">{{ errorMessage }}</p>
             </div>
         </main>
     </div>
@@ -129,75 +114,19 @@
 
 <script>
 // import $ from "jquery";
-import { fbase, db } from "../firebase";
+import { fbase } from "../firebase";
+import AllFormFeedbacks from "../components/AllFormFeedbacks.vue";
+import AllRecordedAudios from "../components/AllRecordedAudios.vue";
 
 export default {
+    components: { AllFormFeedbacks, AllRecordedAudios },
     name: "Feedbacks",
 
     data() {
-        return {
-            allFeedbacks: null,
-            displayedFeedbacks: null,
-            records: null,
-            page: 1,
-            perSize: 2,
-            perPage: null,
-
-            errorMessage: "You don't currently have any consumer feedback.",
-        };
-    },
-
-    computed: {
-        isFeedbackAvailable() {
-            return this.displayedFeedbacks !== null;
-        },
+        return {};
     },
 
     methods: {
-        nextPrevFeedback() {
-            // console.log(
-            //     `Page ${this.page} was selected. Do something about it`
-            // );
-
-            let x = (this.page - 1) * this.perSize,
-                y = this.page * this.perSize;
-
-            let feedbacks = this.allFeedbacks.slice(x, y);
-            this.displayedFeedbacks = feedbacks;
-
-            // console.log(feedbacks, x, y);
-        },
-
-        getFormFeedbacks() {
-            /* And use .orderBy("createdAt--field used") to order by time..
-                Replace .get().then() with .onSnapshot() for realtime update, and change .catch((error) => {} to , (error) => {}
-            */
-            db
-                .collection("feedbacks")
-                // .orderBy("createdAt")
-                .onSnapshot((querySnapshot) => {
-                    let allFeedbacks = [];
-
-                    querySnapshot.forEach((doc) => {
-                        allFeedbacks.push(doc.data());
-                    });
-
-                    this.allFeedbacks = allFeedbacks;
-                    this.records = allFeedbacks.length;
-                    this.perPage = Math.ceil(
-                        allFeedbacks.length / this.perSize
-                    );
-
-                    this.nextPrevFeedback();
-
-                    // console.log(this.allFeedbacks);
-                }),
-                (error) => {
-                    console.log(error);
-                    // this.errorMessage = error.message;
-                };
-        },
-
         logout() {
             fbase
                 .auth()
@@ -212,12 +141,6 @@ export default {
     },
 
     mounted() {
-        this.getFormFeedbacks();
-
-        // if (this.allFeedbacks) {
-        //     this.nextPrevFeedback();
-        // }
-
         setTimeout(() => {
             this.logout();
         }, 1000 * 60 * 60 * 3);
@@ -227,46 +150,8 @@ export default {
 
 <style scoped lang="scss">
 main {
-    width: 100%;
     // max-width: 750px !important;
     min-height: 400px;
-
-    .logo_container {
-        max-width: 73px;
-        margin-top: -50px;
-        margin-bottom: 35px;
-        margin-left: -45px;
-    }
-}
-
-.logoutBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 2%;
-    right: 2%;
-    width: 100%;
-    max-width: 85px;
-    padding: 0.125rem;
-    border: 1px solid #fff;
-    border-radius: 0.25rem;
-    cursor: pointer;
-
-    &:hover {
-        transform: scale(0.95);
-    }
-
-    & span {
-        margin-right: 0.5rem;
-        font-size: 14px;
-    }
-
-    & svg {
-        fill: #fff;
-        height: 1rem;
-        width: 1rem;
-    }
 }
 
 .back_to_submit_feedback {
@@ -275,68 +160,9 @@ main {
 
 .welcome-text {
     padding-top: 25px;
-    padding-bottom: 5px !important;
+    padding-bottom: 25px !important;
 }
 
-/* hide all steps by default: */
-.tab p {
-    font-size: 15px;
-}
-
-.promoter {
-    font-size: 1.5rem;
-}
-
-.feedbacks_container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    margin-bottom: 1.25rem;
-
-    .title {
-        font-size: 1.25rem;
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
-    }
-
-    & p {
-        color: #ccc;
-        font-size: 15px;
-        font-weight: 300;
-        text-transform: initial;
-
-        .sub_title {
-            color: #fff;
-        }
-    }
-
-    @media screen and (max-width: 426px) {
-        & span + span {
-            margin-top: 2rem;
-        }
-
-        & span p:last-child {
-            margin-bottom: 0;
-        }
-    }
-}
-
-.pagination_container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 40px;
-    text-align: center;
-}
-
-.error_message {
-    margin-top: 2rem;
-    text-align: center;
-
-    .error_text {
-        font-weight: 300;
-        font-size: 1.25rem;
-        font-style: italic;
-        line-height: 1.5;
-    }
-}
+@import "@/assets/styles/_logoLogout.scss";
+@import "@/assets/styles/_navTabs.scss";
 </style>

@@ -382,21 +382,6 @@ main .logo_container {
     margin: -40px auto 35px;
 }
 
-.nav-pills .nav-link {
-    text-transform: uppercase;
-    color: var(--customBlue);
-    font-size: 15px;
-
-    &:not(.nav-link.active):hover {
-        color: var(--customBlueLight);
-        background: rgba(0, 0, 0, 0.2);
-    }
-}
-
-.nav-pills .nav-link.active {
-    background: var(--customBlue);
-}
-
 .form-group {
     position: relative;
 
@@ -441,4 +426,6 @@ form button {
         vertical-align: text-bottom;
     }
 }
+
+@import "@/assets/styles/_navTabs.scss";
 </style>
