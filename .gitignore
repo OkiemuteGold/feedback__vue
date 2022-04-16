@@ -2,6 +2,7 @@
 node_modules
 /dist
 /sample.txt
+/adminUsers.js
 
 
 # local env files
