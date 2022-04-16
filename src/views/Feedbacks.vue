@@ -49,7 +49,7 @@
                     </button>
                 </li>
 
-                <!-- <li class="nav-item" role="presentation">
+                <li class="nav-item" role="presentation">
                     <button
                         class="nav-link"
                         id="pills-uploadedAudio-tab"
@@ -62,7 +62,7 @@
                     >
                         Uploaded Audio
                     </button>
-                </li> -->
+                </li>
 
                 <li class="nav-item" role="presentation">
                     <button
@@ -90,14 +90,14 @@
                     <AllFormFeedbacks />
                 </div>
 
-                <!-- <div
+                <div
                     class="tab-pane fade"
                     id="pills-uploadedAudio"
                     role="tabpanel"
                     aria-labelledby="pills-uploadedAudio-tab"
                 >
-                    <MultiStepForm />
-                </div> -->
+                    <AllUploadedAudios />
+                </div>
 
                 <div
                     class="tab-pane fade"
@@ -117,9 +117,10 @@
 import { fbase } from "../firebase";
 import AllFormFeedbacks from "../components/AllFormFeedbacks.vue";
 import AllRecordedAudios from "../components/AllRecordedAudios.vue";
+import AllUploadedAudios from "../components/AllUploadedAudios.vue";
 
 export default {
-    components: { AllFormFeedbacks, AllRecordedAudios },
+    components: { AllFormFeedbacks, AllRecordedAudios, AllUploadedAudios },
     name: "Feedbacks",
 
     data() {
@@ -160,7 +161,17 @@ main {
 
 .welcome-text {
     padding-top: 25px;
-    padding-bottom: 25px !important;
+    padding-bottom: 30px !important;
+}
+
+@media screen and (max-width: 426px) {
+    .nav {
+        flex-direction: column;
+
+        li + li {
+            margin-top: 0.5rem;
+        }
+    }
 }
 
 @import "@/assets/styles/_logoLogout.scss";

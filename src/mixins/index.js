@@ -55,25 +55,16 @@ Vue.mixin({
         validateSize(fileSize) {
             let stringSize = String(fileSize);
 
-            if (stringSize.length < 3) {
-                this.showFileInfo = false;
-                this.successMessage = `
-                    Please upload an audio file higher than ${fileSize} bytes.
-                `;
-            } else {
-                this.showFileInfo = true;
-
-                if (stringSize.length <= 6) {
-                    this.audioSize = `
+            if (stringSize.length <= 6) {
+                fileSize = `
                         ${(fileSize / 1000).toFixed(2)}kb
                     `;
-                }
-                if (stringSize.length > 6) {
-                    this.audioSize = `
+            } else if (stringSize.length > 6) {
+                fileSize = `
                         ${(fileSize / 1000 / 1000).toFixed(2)}mb
                     `;
-                }
             }
+            this.audioSize = fileSize;
         },
     },
 });

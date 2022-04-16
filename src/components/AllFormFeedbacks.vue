@@ -2,8 +2,6 @@
     <div>
         <div class="form-group tab" v-if="isFeedbackAvailable">
             <div v-for="feedback in displayedFeedbacks" :key="feedback.id">
-                <!-- <hr /> -->
-
                 <h2 class="promoter">Promoter: {{ feedback.Promoter }}</h2>
                 <p class="date">Date: {{ feedback.Date }}</p>
 
@@ -104,8 +102,8 @@ export default {
 
     data() {
         return {
-            allFeedbacks: null,
-            displayedFeedbacks: null,
+            allFeedbacks: [],
+            displayedFeedbacks: [],
             records: null,
             page: 1,
             perSize: 2,
@@ -117,7 +115,10 @@ export default {
 
     computed: {
         isFeedbackAvailable() {
-            return this.displayedFeedbacks !== null;
+            return (
+                this.displayedFeedbacks !== null &&
+                this.displayedFeedbacks.length > 0
+            );
         },
     },
 
@@ -220,12 +221,14 @@ export default {
 }
 
 .error_message {
-    margin-top: 2rem;
+    width: 100%;
+    max-width: 270px;
+    margin: 2rem auto 0;
     text-align: center;
 
     .error_text {
         font-weight: 300;
-        font-size: 1.25rem;
+        font-size: 1rem;
         font-style: italic;
         line-height: 1.5;
     }
