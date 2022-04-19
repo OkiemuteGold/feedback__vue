@@ -2,6 +2,9 @@
 
 ### Feedback_form app made with vue.js
 
+Feedback app for a marketing and product delivery firm.
+Authentication, form, audio, drag & drop, and live recording and upload functionalities. Generated unique IDs for all audio uploads and updated metas with unique ID to track upload references from folders in Firestore and Storage using initially uploaded IDs. Displayed file sizes in Kb/Mb. Admins can view feedbacks, and play audio live while on the app. Tests/validations UIs and functionalities done from scratch.
+
 ## Project setup
 
 ```
