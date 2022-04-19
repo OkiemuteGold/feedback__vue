@@ -8,11 +8,12 @@ import "firebase/firebase-analytics";
 import "firebase/firebase-storage";
 
 require("firebase/firestore");
+import key from "../key.txt";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 var firebaseConfig = {
-    apiKey: "AIzaSyAKyAh124MiDQr-ejh1koPkmHzPH0UKccY",
+    apiKey: key[0].key,
     authDomain: "feedback-form-4c8fb.firebaseapp.com",
     projectId: "feedback-form-4c8fb",
     storageBucket: "feedback-form-4c8fb.appspot.com",
