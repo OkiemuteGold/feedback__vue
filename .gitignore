@@ -4,6 +4,7 @@ node_modules
 /key.txt
 /adminUsers.txt
 /sample.txt
+src/firebase.js
 
 
 # local env files
