@@ -14,12 +14,12 @@ import key from "../key.txt";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 var firebaseConfig = {
     apiKey: key[0].key,
-    authDomain: "feedback-form-4c8fb.firebaseapp.com",
-    projectId: "feedback-form-4c8fb",
-    storageBucket: "feedback-form-4c8fb.appspot.com",
-    messagingSenderId: "1012912839173",
-    appId: "1:1012912839173:web:3c56c0e719ec7d85871a6c",
-    measurementId: "G-JHSGGGQZ98"
+    authDomain: key[0].authDomain,
+    projectId: key[0].projectId,
+    storageBucket: key[0].storageBucket,
+    messagingSenderId: key[0].messagingSenderId,
+    appId: key[0].appId,
+    measurementId: key[0].measurementId
 };
 
 // Initialize Firebase
